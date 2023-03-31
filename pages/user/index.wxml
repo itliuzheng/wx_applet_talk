@@ -72,7 +72,7 @@
     <view class="modal-container">
       <view class="modal-title">扫描二维码关注公众号</view>
       <view class="modal-image-container">
-        <image class="modal-image" src="/path/to/qrcode.jpg" mode="aspectFit"></image>
+        <image class="modal-image" src="/public/img/myself/qrcode.jpg" 	show-menu-by-longpress="{{true}}" mode="aspectFit"></image>
       </view>
       <view class="modal-footer">
         <button class="modal-button" type="primary" bindtap="onScanCodeTap">扫描</button>
