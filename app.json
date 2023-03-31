@@ -1,0 +1,46 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/user/index",
+    "pages/user/setting/index",
+    "pages/user-auth/index",
+    "pages/user-phone/index"
+  ],
+  "window": {
+    "backgroundTextStyle": "dark",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "WeChat",
+    "navigationBarTextStyle": "black"
+  },
+  "sitemapLocation": "sitemap.json",
+  "tabBar": {
+    "backgroundColor": "#ffffff",
+    "color": "#484848",
+    "selectedColor": "#2967ff",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "iconPath": "public/img/icon_menu1_001.png",
+        "selectedIconPath": "public/img/icon_menu1_002.png",
+        "text": ""
+      },
+      {
+        "pagePath": "pages/user/index",
+        "iconPath": "public/img/icon_menu2_001.png",
+        "selectedIconPath": "public/img/icon_menu2_002.png",
+        "text": ""
+      }
+    ]
+  },
+  "usingComponents": {
+    
+  },
+  "lazyCodeLoading": "requiredComponents",
+  "style": "v2",
+  "fonts": {
+    "source-sans": {
+      "url": "/fonts/SourceHanSerifCN-Regular-1.otf",
+      "desc": "Source Sans Pro"
+    }
+  }
+}

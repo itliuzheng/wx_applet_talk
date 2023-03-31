@@ -1,0 +1,7 @@
+{
+  "navigationBarBackgroundColor": "#fff",
+  "navigationBarTitleText": "我的",
+  "usingComponents": {
+    "user-auth":"/components/user-auth/index"
+  }
+}

@@ -1,0 +1,6 @@
+<view class="page">
+  <image src="/public/img/logo/logo.png"></image>
+
+  <button class="yd-btn" open-type="getPhoneNumber" bindgetphonenumber="agreeGetPhoneNumber" lang="zh_CN">微信用户一键登录</button>
+  <button class="yd-btn yd-btn-cancel" bindtap="goBack">取消登录</button>
+</view>

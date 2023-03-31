@@ -1,0 +1,10 @@
+{
+  "navigationBarTitleText": "SMART AI 一直在线",
+  "backgroundColor": "#fff",
+  "navigationBarBackgroundColor": "#F2F2F2",
+  "navigationBarTextStyle": "black",
+  "enablePullDownRefresh":true,
+  "usingComponents": {
+
+  }
+}

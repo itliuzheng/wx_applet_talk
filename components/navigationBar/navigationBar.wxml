@@ -1,0 +1,7 @@
+<view class="title" style="padding-top:{{statusBarHeight}}px;height:{{statusBarHeight+navigationHeight}}px;background-color:{{bgColor!=''?bgColor:'#fff'}}">
+    <view class="arrow-box" catchtap="goback" style="top:{{statusBarHeight}}px;height:{{navigationHeight}}px">
+        <view class="arrow"></view>
+    </view>
+    <view class="name" bindtap="clickTitle">{{title}}</view>
+    
+</view>

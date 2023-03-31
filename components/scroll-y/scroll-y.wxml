@@ -1,0 +1,108 @@
+<!--components/scroll-y/scroll-y.wxml-->
+<!--
+  @author:hgqin
+  自定义scroll-y组件, 基于scroll-view的自定义下拉刷新和上拉加载
+-->
+
+<scroll-view  
+  class="scroll-y"
+  style="height:{{height}}"
+  scroll-y="{{true}}"
+  scroll-top="{{scrollTop}}"
+  scroll-anichoring="{{true}}"
+  refresher-enabled="{{true}}"
+  refresher-threshold="{{refresherThreshold}}"
+  refresher-default-style="none"
+  refresher-background="{{refresherBackground}}"
+  refresher-triggered="{{refresherTriggered}}"
+  bindrefresherpulling="onPulling"
+  bindrefresherrefresh="onRefresh"
+  bindrefresherrestore="onRestore"
+  bindrefresherabort="onAbort"
+  bindtouchstart="_onTouchStart"
+  bindtouchmove="onTouchMove"
+  bindtouchend="onTouchEnd"
+>
+  <view slot="refresher" class="refresh-container" style="height:{{refresherThreshold}}px">
+    <!--下拉动画-->
+    <view class="pull-animation" wx:if="{{!isRefreshing}}">
+
+      <!--圆形进度条样式-->
+      <block wx:if="{{pullStyle === 'circle-progress'}}">
+        <view class="circle-progress">
+          <view class="circle-wrap left-circle-wrap">
+            <view class="circle left-circle"></view>
+          </view>
+          <view class="circle-wrap right-circle-wrap">
+            <view class="circle right-circle"></view>
+          </view>
+          <view class="circle-arrow">
+            <view class="circle-arrow-down"></view>
+          </view>
+        </view>
+      </block>
+      <!--圆形进度条样式end-->
+
+      <!--自定义-->
+      <block wx:if="{{pullStyle === 'diy'}}">
+        <slot name="pull-animation"></slot>
+      </block>
+      <!--自定义-->
+
+      <!--提示（下拉提示和释放提示）-->
+      <view class="tip" wx:if="{{!canRelease}}"  style="color:{{tipTextColor}}">{{pullTip}}</view>
+      <view class="tip" wx:else  style="color:{{tipTextColor}}">{{releaseTip}}</view>
+      <!--提示end-->
+
+    </view>
+    <!----------------------------------------下拉动画end---------------------------------------->
+
+    <!----------------------------------------刷新动画-------------------------------------------->
+    <view class="refresh-animation" wx:else>
+
+      <!--圆形-->
+      <block wx:if="{{refreshStyle === 'circle'}}">
+        <view class="circle-refresh"></view>
+      </block>
+      <!--圆形end-->
+
+      <!--时钟类型-->
+      <block wx:elif="{{refreshStyle === 'clock'}}">
+        <view class="clock-refresh"></view>
+      </block>
+      <!--时钟类型end-->
+
+     <!--自定义-->
+      <block wx:if="{{refreshStyle === 'diy'}}">
+        <slot name="refresh-animation"></slot>
+      </block>
+      <!--自定义-->
+
+      <!--刷新提示-->
+      <view class="tip"  style="color:{{tipTextColor}}">{{refreshTip}}</view>
+      <!--刷新提示end-->
+    </view>
+    <!--刷新动画end-->
+
+  </view>
+
+  <!--内容-->
+  <slot name="scroll-content"></slot>
+  <!--内容 end -->
+
+  <!--加载动画-->
+  <view class="loading" style="background-color:{{loadBackground}}" wx:if="{{showLoading}}">
+    <block wx:if="{{loadStyle === 'circle'}}">
+      <view class="circle-refresh"></view>
+    </block>
+    <block wx:elif="{{loadStyle === 'clock'}}">
+       <view class="clock-refresh"></view>
+    </block>
+    <block wx:elif="{{loadStyle === 'diy'}}">
+      <slot name="load-animation"></slot>
+    </block>
+    <view class="tip" style="color:{{tipTextColor}}">{{loadTip}}</view>
+  </view>
+  <!--加载动画end-->
+
+</scroll-view>

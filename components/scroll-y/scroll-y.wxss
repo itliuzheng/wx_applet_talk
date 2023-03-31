@@ -1,0 +1,164 @@
+/* components/scroll-y/scroll-y.wxss */
+.scroll-y {
+  width: 100%;
+}
+
+/**refresher-container**/
+.refresh-container {
+  position: relative;
+  width: 100%;
+}
+
+.pull-animation,
+.refresh-animation {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.tip{
+  display: inline-block;
+  margin-left:10px;
+  font-size:11px;
+}
+
+/**圆环进度条**/
+.circle-progress{
+  position: relative;
+  width:20px;
+  height:20px;
+  overflow: hidden;
+}
+
+.circle-wrap{
+  position: absolute;
+  top:0;
+  width:10px;
+  height: 20px;
+  overflow: hidden;
+  z-index:9999;
+}
+
+.circle-arrow{
+  position: absolute;
+  top:0;
+  left:0;
+  width:20px;
+  height:20px;
+  overflow: hidden;
+}
+
+.circle-arrow-down{
+  position: absolute;
+  left:7px;
+  top:6px;
+  width:5px;
+  height: 5px;
+  border-width: 0 1px 1px 0;
+  border-color: #b2b2b2;
+  border-style: solid;
+  transform: rotate(45deg);
+}
+
+
+.left-circle-wrap{
+  left:0;
+}
+
+.right-circle-wrap{
+  right:0;
+}
+
+.circle{
+  position: absolute;
+  width:18px;
+  height:18px;
+  border:1px solid transparent;
+  border-radius: 50%;
+  transform: rotate(135deg);
+}
+
+.left-circle{
+  left:0;
+  border-left-color:#b2b2b2;
+  border-top-color:#b2b2b2;
+}
+
+.right-circle{
+  right:0;
+  border-right-color:#b2b2b2;
+  border-bottom-color: #b2b2b2;
+}
+
+/**圆环刷新**/
+.circle-refresh{
+  width: 20px;
+  height: 20px;
+  border:2px solid rgba(150, 150, 150, 0.2);
+  border-radius: 50%;
+  border-top-color:rgb(150, 150, 150);
+  box-sizing: border-box;
+  animation:circleRefreshAnimation 1s  0s infinite linear normal;
+}
+
+@keyframes circleRefreshAnimation{
+  0%{
+    transform: rotate(0deg);
+  }
+  50%{
+    transform: rotate(180deg);
+  }
+  100%{
+    transform: rotate(360deg);
+  }
+}
+
+/**时钟刷新**/
+.clock-refresh{
+  position: relative;
+  width:20px;
+  height:20px;
+  border:1px solid #b2b2b2;
+  border-radius: 50%;
+  box-sizing: border-box;
+}
+
+.clock-refresh::before{
+  content:'';
+  position: absolute;
+  left:8px;
+  top:2px;
+  width:2px;
+  height: 8px;
+  border-left:1px solid #b2b2b2;
+  transform-origin: 0% 100%;
+  animation:clockRefreshAnimation 1s infinite linear;
+}
+
+@keyframes clockRefreshAnimation{
+  0%{
+    transform: rotate(0deg);
+  }
+  50%{
+    transform: rotate(180deg);
+  }
+  100%{
+    transform: rotate(360deg);
+  }
+}
+
+
+/**加载**/
+.loading{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  padding:20px 0;
+}
