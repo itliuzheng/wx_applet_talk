@@ -9,9 +9,9 @@ const baseApi = {
   develop: "https://xp666.fun",
   // develop: "https://www.yuedu.love/api",
   // 体验版
-  trial: "",
+  trial: "https://xp666.fun",
   // 正式版
-  release: ""
+  release: "https://xp666.fun"
 };
 
 export default {
