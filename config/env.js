@@ -6,7 +6,7 @@ console.error("获取运行环境失败!");
 }
 const baseApi = {
   // 开发版
-  develop: "http://localhost:7500",
+  develop: "https://xp666.fun",
   // develop: "https://www.yuedu.love/api",
   // 体验版
   trial: "",

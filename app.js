@@ -65,7 +65,6 @@ App({
   initPage: function () {
     let that = this;
     return new Promise((resolve, reject) => {
-      return resolve("success");
       if (!that.globalData.thirdSession) { //无thirdSession，进行登录
         that.doLogin()
           .then(res => {
@@ -75,12 +74,13 @@ App({
         wx.checkSession({ //检查登录态是否过期
           success() {
             //获取用户信息
-            that.wxUserGet()
-            .then( ()=>{
-              //session_key 未过期，并且在本生命周期一直有效
-              console.log('session_key 未过期')
-              resolve("success")
-            })
+            // that.wxUserGet()
+            // .then( ()=>{
+            //   //session_key 未过期，并且在本生命周期一直有效
+            //   console.log('session_key 未过期')
+            //   resolve("success")
+            // })
+            resolve("success")
           },
           fail() {
             // session_key 已经失效，需要重新执行登录流程
@@ -122,29 +122,32 @@ App({
       wx.login({
         success: function (res) {
           if (res.code) {
-            let yuedu_share_wid = null;
+            let share_wid = null;
             try {
-              yuedu_share_wid = wx.getStorageSync('yuedu_share_wid');
+              share_wid = wx.getStorageSync('share_wid');
             } catch (e) {}
-            // api.login({
-            //     jsCode: res.code,
-            //     wid: that.globalData.share_wid || yuedu_share_wid
-            //   })
-            //   .then(res => {
-            //     wx.hideLoading()
-            //     let wxUser = res.data;
-            //     that.globalData.thirdSession = wxUser.sessionKey;
-            //     that.globalData.wxUser = wxUser;
-            //     wx.setStorage({
-            //       key: "thirdSession",
-            //       data: wxUser.sessionKey
-            //     })
-            //     wx.setStorage({
-            //       key: "wxUser",
-            //       data: JSON.stringify(wxUser)
-            //     })
-            //     resolve("success")
-            //   })
+            api.login({
+                code: res.code,
+                // wid: that.globalData.share_wid || share_wid
+              })
+              .then(res => {
+                
+                console.log(res);
+
+                wx.hideLoading()
+                let wxUser = res.data;
+                that.globalData.thirdSession = wxUser.session_key;
+                that.globalData.wxUser = wxUser;
+                wx.setStorage({
+                  key: "thirdSession",
+                  data: wxUser.session_key
+                })
+                wx.setStorage({
+                  key: "wxUser",
+                  data: JSON.stringify(wxUser)
+                })
+                resolve("success")
+              })
           }
         }
       })
@@ -276,7 +279,7 @@ App({
     if (scene != 'undefined') {
       let widarr = scene.split('=');
       wx.setStorage({
-        key: "yuedu_share_wid",
+        key: "share_wid",
         data: widarr[1]
       })
       this.globalData.share_wid = widarr[1];
@@ -284,7 +287,7 @@ App({
     }
     if (options.wid) {
       wx.setStorage({
-        key: "yuedu_share_wid",
+        key: "share_wid",
         data: options.wid
       })
       this.globalData.share_wid = options.wid

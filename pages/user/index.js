@@ -121,6 +121,12 @@ Page({
     console.log('11');
     const promise = new Promise(resolve => {
       setTimeout(() => {
+
+        app.api.wxRechargeUpdateCount({
+          type:'share',
+          userId : app.globalData.wxUser.openid
+        })
+
         resolve({
           title: '自定义转发标题1',
           path: '/pages/index/index',
@@ -143,6 +149,10 @@ Page({
           title: 'SmartAI2'
         })
       }, 500)
+    })
+    app.api.wxRechargeUpdateCount({
+      type:'pyq',
+      userId : app.globalData.wxUser.openid
     })
     return {
       title: 'SmartAI',

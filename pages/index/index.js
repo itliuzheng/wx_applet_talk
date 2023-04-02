@@ -30,6 +30,8 @@ Page({
     messageTime: '',// 回复时间显示逻辑
     btnDisabled:true,// 按钮是否置灰状态
     btnText:'发送', //按钮文字
+    canUseCount:0, //可用次数
+    chatId:null, // 会话id (首次可不传，后端返回，之后需要传，用于关联上下文)
     // btnText:'回复中', //按钮文字
   },
 
@@ -44,6 +46,10 @@ Page({
   },
   // 初始化，获取对话信息
   getInfo(){
+    app.initPage()
+    .then(()=>{
+      this.getUserInfoNumber();
+    })
     setTimeout(()=>{
       let msgList = this.data.msgList;
       if(this.data.msgList.length === 0){
@@ -61,6 +67,23 @@ Page({
         scrollIntoView: `msg-item-${this.data.msgList.length - 1}`, // 滚动到最后一条消息
       })
     },500)
+  },
+  // 获取用户次数
+  getUserInfoNumber(){
+    // app.openid()
+    console.log(1);
+    console.log(app.globalData.wxUser);
+    app.api.wxUserAccountQueryCount({
+      userId : app.globalData.wxUser.openid
+    }).then(res=>{
+      console.log(res);
+      this.setData({
+        canUseCount:res.data
+      })
+    })
+    .catch(()=>{
+      console.log('fail');
+    })
   },
   // 处理用户输入
   onInput(e) {
@@ -82,6 +105,14 @@ Page({
       return;
     }
     
+    let count = this.data.canUseCount;
+    if(count <= 0){
+      wx.showToast({
+        icon:'none',
+        title: '您当前次数已用光。'
+      })
+      return
+    }
     console.log(inputVal);
 
     // 将用户输入加入对话列表
@@ -106,43 +137,38 @@ Page({
       btnText:'回复中',
       scrollIntoView: `msg-item-${msgList.length - 1}`, // 滚动到最后一条消息
     });
-    setTimeout(()=>{
-      if(inputVal === '222'){
-        // 失败
-        this.replyError();
-      }else{
-        // 成功
-        this.setReply();
-      }
-    },1000)
 
-    // 调用 ChatGPT 进行对话
-    // this.chatGPT.post({
-    //   data: {
-    //     text: inputVal,
-    //   },
-    //   success: (res) => {
-    //     // 将 ChatGPT 返回的结果加入对话列表
-    //     const msgList = this.data.msgList;
-    //     msgList.push({
-    //       type: 'in',
-    //       content: res.data.text,
-    //     });
-    //     this.setData({
-    //       msgList,
-    //       scrollIntoView: `msg-item-${msgList.length - 1}`, // 滚动到最后一条消息
-    //     });
-    //   },
-    //   fail: (err) => {
-    //     console.log('ChatGPT 对话失败：', err);
-    //   },
-    // });
+    this.apiChat(inputVal);
+  },
+  // 请求chat
+  apiChat(inputVal){
+    app.api.wxChat({
+      userId: app.globalData.wxUser.openid,
+      context: inputVal,
+      chatId: this.data.chatId
+    })
+    .then(res=>{
+      console.log(res);
+      if(res.errorCode === '0000'){
+        this.setData({
+          chatId: res.data.chatId,
+        });
+        // 成功
+        this.setReply(res.data.context);
+      }else{
+        // 失败
+        this.replyError(inputVal);
+      }
+    })
+    .catch(()=>{
+      this.replyError(inputVal);
+    })
   },
   // 设置ai回复时，逐字显示动效 
-  setReply(){
+  setReply(replyContent){
     const msgList = this.data.msgList;
     // 回复的内容
-    let replyContent = "你好，我是SMARTAI，最聪明的智能机器人，你可以问我任何问题，上至天文下至地理，我将知无不言言无不尽";
+    // let replyContent = "你好，我是SMARTAI，最聪明的智能机器人，你可以问我任何问题，上至天文下至地理，我将知无不言言无不尽";
     // 字数动效起点
     var textIndex = 0;
     // 对话列表最后一组数据
@@ -171,7 +197,8 @@ Page({
       console.log(textIndex === replyContent.length);
       if(textIndex === replyContent.length){
         clearInterval(timer);
-
+        // 重新获取次数
+        this.getUserInfoNumber();
         this.setData({
           btnDisabled:true,
           btnText:'发送',
@@ -180,7 +207,7 @@ Page({
     },100)
   },
   // 回复失败
-  replyError(){
+  replyError(inputVal){
     const msgList = this.data.msgList;
     // 回复的内容
     let replyContent = "服务连接失败，点击重试";
@@ -190,7 +217,8 @@ Page({
       type: 'in',
       content: replyContent,
       avatar:'/public/img/logo/smartai-logo.png',
-      result:'error'
+      result:'error',
+      inputVal:inputVal,// 原用户输入的文字
     }
     this.setData({
       msgList,
@@ -200,7 +228,32 @@ Page({
     });
   },
   // 重发请求
-  resendApi(){
-    this.setReply();
-  }
+  resendApi(e){
+    console.log(e);
+    let inputVal = e.currentTarget.dataset.inputVal;
+    this.apiChat(inputVal);
+  },
+  // 分享给朋友
+  onShareAppMessage(){
+    console.log('11');
+    const promise = new Promise(resolve => {
+      setTimeout(() => {
+
+        app.api.wxRechargeUpdateCount({
+          type:'share',
+          userId : app.globalData.wxUser.openid
+        })
+
+        resolve({
+          title: '自定义转发标题1',
+          path: '/pages/index/index',
+        })
+      }, 500)
+    })
+    return {
+      title: '自定义转发标题',
+      path: '/pages/index/index',
+      promise 
+    }
+  },
 })

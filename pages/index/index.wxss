@@ -116,8 +116,13 @@
   margin-bottom: 6rpx;
 }
 .input-box-wrapper .remark .blue {
-  display: inline-block;
+  display: inline;
   color: #0585F5;
+}
+.input-box-wrapper .remark button {
+  padding: 0;
+  font-size: 24rpx;
+  width: auto;
 }
 .input-box-content {
   display: flex;

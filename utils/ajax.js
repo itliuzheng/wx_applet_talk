@@ -24,10 +24,11 @@ module.exports = (url, method, data, showLoading) => {
         'third-session': getApp().globalData.thirdSession != null ? getApp().globalData.thirdSession : ''
       },
       success(res) {
+        console.log(res);
         if (res.statusCode == 200) {
-          if (res.data.code != 200) {
+          if (res.data.errorCode != '0000') {
             // console.log(res.data)
-            if(res.data.code == 60002){
+            if(res.data.errorCode == 60002){
               wx.clearStorageSync();
               getApp().globalData.thirdSession = null;
               getApp().initPage().then(()=>{
@@ -41,30 +42,30 @@ module.exports = (url, method, data, showLoading) => {
                 wx.clearStorageSync();
                 getApp().globalData.thirdSession = null;
               }else{
-                wx.showModal({
-                  title: '提示',
-                  content: res.data.msg ? res.data.msg : '没有数据' + '',
-                  success() {
+                // wx.showModal({
+                //   title: '提示',
+                //   content: res.data.msg ? res.data.msg : '没有数据' + '',
+                //   success() {
                     
-                  },
-                  complete(){
-                    if(res.data.code == 60001){
-                      //session过期，则清除过期session，并重新加载当前页
-                      try {
-                        wx.clearStorageSync();
-                        getApp().globalData.thirdSession = null;
+                //   },
+                //   complete(){
+                //     if(res.data.code == 60001){
+                //       //session过期，则清除过期session，并重新加载当前页
+                //       try {
+                //         wx.clearStorageSync();
+                //         getApp().globalData.thirdSession = null;
                         
-                        getApp().initPage().then(()=>{
-                          wx.reLaunch({
-                            url: getApp().getCurrentPageUrlWithArgs()
-                          })
-                        })
-                      } catch(e) {
-                        // Do something when catch error
-                      }
-                    }
-                  }
-                })
+                //         getApp().initPage().then(()=>{
+                //           wx.reLaunch({
+                //             url: getApp().getCurrentPageUrlWithArgs()
+                //           })
+                //         })
+                //       } catch(e) {
+                //         // Do something when catch error
+                //       }
+                //     }
+                //   }
+                // })
               }
             }
             reject(res.data.msg)

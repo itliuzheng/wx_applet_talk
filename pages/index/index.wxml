@@ -8,7 +8,7 @@
       <view id="msg-item-{{index}}" class="msg-item {{item.type === 'in' ? 'in' : 'out'}} {{item.result === 'loading'?'loading':''}}">
         <image class="avatar {{item.type === 'in' ? 'in' : 'out'}}" src="{{item.avatar}}"></image>
         <!-- 如果服务器连接失败，则显示重试按钮 -->
-        <view wx:if="{{item.result === 'error'}}" bindtap="resendApi">
+        <view wx:if="{{item.result === 'error'}}" data-input-val="{{item.inputVal}}" bindtap="resendApi">
           <view class="msg-content msg-content-error {{item.type === 'in' ? 'in' : 'out'}}">
             <view class="msg-reply">{{item.content}}</view>
             <image class="error-reload-img" src="/public/img/message/reload.png"></image>
@@ -23,7 +23,7 @@
   </scroll-view>
 </view>
 <view class="input-box-wrapper">
- <view class="remark">*今日可用次数：3次，<view class="blue">分享好友</view>可多得3次</view>
+ <view class="remark">*今日可用次数：{{canUseCount}}次，<button open-type="share" class="blue">分享好友</button>可多得3次</view>
  <view class="input-box-content">
    <input class="input-box" value="{{inputVal}}" placeholder="" bindinput="onInput"/>
    <button class="btn" type="primary" bindtap="onSend" disabled="{{btnDisabled}}">{{btnText}}</button>
