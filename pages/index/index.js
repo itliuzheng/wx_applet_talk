@@ -64,7 +64,7 @@ Page({
       this.setData({
         messageTime:getMessageTime(time?time:new Date()),
         msgList,
-        scrollIntoView: `msg-item-${this.data.msgList.length - 1}`, // 滚动到最后一条消息
+        scrollIntoView: 'reply-end', // 滚动到最后一条消息
       })
     },500)
   },
@@ -132,7 +132,7 @@ Page({
       inputVal: '',
       btnDisabled: true,
       btnText:'回复中',
-      scrollIntoView: `msg-item-${msgList.length - 1}`, // 滚动到最后一条消息
+      scrollIntoView: 'reply-end', // 滚动到最后一条消息
     });
 
     this.apiChat(inputVal);
@@ -202,7 +202,6 @@ Page({
       this.setData({
         msgList,
         btnText:'回复中',
-        // scrollIntoView: `msg-item-${msgList.length - 1}`, // 滚动到最后一条消息
         scrollIntoView: 'reply-end', // 滚动到最后一条消息
       });
       // 定时器结束
@@ -217,7 +216,6 @@ Page({
           msgList,
           btnDisabled:true,
           btnText:'发送',
-          // scrollIntoView: `msg-item-${msgList.length - 1}`, // 滚动到最后一条消息
         });
         setTimeout(()=>{
           this.setData({
@@ -246,7 +244,7 @@ Page({
       msgList,
       btnDisabled:true,
       btnText:'发送',
-      scrollIntoView: `msg-item-${msgList.length - 1}`, // 滚动到最后一条消息
+      scrollIntoView: 'reply-end', // 滚动到最后一条消息
     });
     this.getUserInfoNumber();
   },
