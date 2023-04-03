@@ -22,7 +22,7 @@
         <view class="cu-item" bindtap="onButtonClick" hover-class="smartai-list-hover" hover-stay-time="200" hover-start-time="0">
           <view class="flex-box">
             <image src="/public/img/myself/list-icon-1.png" class="icon"></image>
-            <text class="no-weight">关注我们获取更多次数</text>
+            <text class="no-weight">关注公众号获取更多次数</text>
           </view>
         </view>
       </view>
@@ -67,7 +67,7 @@
   <button class="login-btn" bindtap="goSetting" type="primary">完善资料</button>
 </view>
 
-<view class="fixed-remark">已接入最新chat语言模型</view>
+<view class="fixed-remark">已接入最新语言模型</view>
 
  <!-- 显示弹框 -->
  <view class="modal" wx:if="{{ showModal }}">

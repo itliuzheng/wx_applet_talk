@@ -121,6 +121,7 @@ page {
   display: flex;
   justify-content: flex-start;
   align-items: center;
+  font-weight: 400;
 }
 .no-weight .red-radius {
   width: 14rpx;

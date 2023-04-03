@@ -55,7 +55,7 @@ Page({
       if(this.data.msgList.length === 0){
         msgList.push({
           type: 'in',
-          content: '你好，我是SMARTAI，最聪明的智能机器人，已接入最新的语言模型，虽然接口付费，但我每天都会为你提供3次免费机会，首次登录可+3次，分享好友+3次，分享朋友圈+3次',
+          content: '你好，我是SMARTAI，最聪明的智能机器人，已接入最新的语言模型，我每天都会为你提供3次免费机会，关注公众号+6次，分享好友+3次，分享朋友圈+3次，活动期间每天免费获取上限20次，更多次数可关注公众号获取',
           avatar:'/public/img/logo/smartai-logo.png',
           result:'success'
         })
@@ -220,10 +220,10 @@ Page({
           // scrollIntoView: `msg-item-${msgList.length - 1}`, // 滚动到最后一条消息
         });
         setTimeout(()=>{
-        this.setData({
-          // 滚动到最后一条消息
-          scrollIntoView: 'reply-end'
-        });
+          this.setData({
+            // 滚动到最后一条消息
+            scrollIntoView: 'reply-end'
+          });
         },100)
       }
     },100)
@@ -248,6 +248,7 @@ Page({
       btnText:'发送',
       scrollIntoView: `msg-item-${msgList.length - 1}`, // 滚动到最后一条消息
     });
+    this.getUserInfoNumber();
   },
   // 重发请求
   resendApi(e){

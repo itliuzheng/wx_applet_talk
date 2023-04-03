@@ -26,7 +26,7 @@
   </scroll-view>
 </view>
 <view class="input-box-wrapper">
- <view class="remark">*今日可用次数：{{canUseCount}}次，<button open-type="share" class="blue">分享好友</button>可多得3次</view>
+ <view class="remark">*今日可用次数：{{canUseCount}}次，<button open-type="share" class="blue">关注公众号</button>解锁更多次数</view>
  <view class="input-box-content">
    <input class="input-box" value="{{inputVal}}" placeholder="" bindinput="onInput"/>
    <button class="btn" type="primary" bindtap="onSend" disabled="{{btnDisabled}}">{{btnText}}</button>
