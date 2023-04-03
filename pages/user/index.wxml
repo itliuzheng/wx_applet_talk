@@ -10,7 +10,8 @@
     </view>
     <view class="head-desc">
       <image class="desc-icon" src="/public/img/myself/icon.png"></image>
-      <text>每天可获得3次免费机会，不叠加</text>
+      <!-- <text>每天可获得{{canUseCount}}次免费机会，不叠加</text> -->
+      <text>每日免费次数会在0:00清零重新计算</text>
     </view>
   </view>
 </view>
@@ -32,7 +33,7 @@
             <image src="/public/img/myself/list-icon-2.png" class="icon"></image>
             <text class="no-weight">分享好友加3次</text>
           </view>
-          <text class="item-sub-desc">仅第1次分享</text>
+          <!-- <text class="item-sub-desc">仅第1次分享</text> -->
         </view>
       </button>
 
@@ -42,7 +43,7 @@
             <image src="/public/img/myself/list-icon-3.png" class="icon"></image>
             <text class="no-weight">分享朋友圈加3次</text>
           </view>
-          <text class="item-sub-desc">仅第1次分享</text>
+          <!-- <text class="item-sub-desc">仅第1次分享</text> -->
         </view>
       </button>
 
@@ -61,8 +62,9 @@
     </view>
   </view>
 
-<view>
-  <button class="login-btn" type="primary">授权登录</button>
+<view wx:if="{{!isAvatarAuth || !isUserNameAuth}}">
+<!-- getWxUserInfo -->
+  <button class="login-btn" bindtap="goSetting" type="primary">完善资料</button>
 </view>
 
 <view class="fixed-remark">已接入最新chat语言模型</view>

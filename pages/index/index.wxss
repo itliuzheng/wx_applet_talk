@@ -35,6 +35,10 @@
     content: ".";
   }
 }
+.reply-end {
+  width: 100%;
+  height: 1rpx;
+}
 .msg-item.in {
   justify-content: flex-start;
 }

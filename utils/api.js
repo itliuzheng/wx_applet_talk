@@ -1,4 +1,3 @@
-
 import __config from '../config/env'
 
 import activityComments from './comments/activity.js'
@@ -8,13 +7,13 @@ import request from './ajax.js'
  * @param {Object} json
  * @returns
  */
-const jsonToUrl =  (json) => {
-	let url = '';
-	for (let name in json) {
-		url += name + '=' + json[name] + '&';
-	}
-	url = url.substring(0, url.length - 1);
-	return url ? '?'+ url : '';
+const jsonToUrl = (json) => {
+  let url = '';
+  for (let name in json) {
+    url += name + '=' + json[name] + '&';
+  }
+  url = url.substring(0, url.length - 1);
+  return url ? '?' + url : '';
 }
 
 module.exports = {
@@ -24,13 +23,13 @@ module.exports = {
   // login: (data) => {//小程序登录接口
   //   return request('/weixin/api/ma/wxuser/login', 'post', data, false)
   // },
-  wxUserGet: (data) => {//微信用户查询
+  wxUserGet: (data) => { //微信用户查询
     return request('/weixin/api/ma/wxuser', 'get', null, false)
   },
-  wxUserSave: (data) => {//微信用户新增
+  wxUserSave: (data) => { //微信用户新增
     return request('/weixin/api/ma/wxuser', 'post', data, true)
   },
-  wxUserPhoneSave: (data) => {//保存用户手机
+  wxUserPhoneSave: (data) => { //保存用户手机
     return request('/weixin/api/ma/wxuser/saveWxUserPhone', 'post', data, true)
   },
 
@@ -77,5 +76,30 @@ module.exports = {
    */
   wxRechargeUpdateCount: (data) => {
     return request('/recharge/updateCount', 'post', data, true)
+  },
+  /**
+   * 填充用户信息
+   * @param {Object} data 
+   * {
+   * "userId":"xxxxxxx",
+   * "userName":"xxxxxxx",
+   * "viaUrl":"xxxxxxx",
+   * "wechat":"xxxxxxx",
+   * "phone":"xxxxxxxx",
+   * "gender":1
+   * }
+   */
+  wxPopulateUserInfo: (data) => {
+    return request('/populateUserInfo', 'post', data, true)
+  },
+  /**
+   * 查询用户信息接口
+   * @param {Object} data 
+   * {
+   * "userId":"xxxxxxx",
+   * }
+   */
+  wxUserAccountQueryUserInfo: (data) => {
+    return request('/userAccount/queryUserInfo', 'post', data, true)
   },
 }

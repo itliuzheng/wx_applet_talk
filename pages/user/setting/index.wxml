@@ -4,7 +4,7 @@
     <view class="content">
       <view class="avatar" style="background-image:url({{wxUser.headimgUrl}})"></view>
       <view>
-        <button class="btn" open-type="chooseAvatar" bindchooseavatar="getAvatar">{{!isAuth?'点击授权':'已授权'}}</button>
+        <button class="btn" open-type="chooseAvatar" bindchooseavatar="getAvatar">{{!isAvatarAuth?'点击授权':'已授权'}}</button>
       </view>
     </view>
   </view>
@@ -13,7 +13,7 @@
     <view class="content">
       <view class="remark">{{wxUser.nickName}}</view>
       <view>
-        <button class="btn" open-type="getUserInfo" bindgetuserinfo="getUserInfo">{{!isAuth?'点击授权':'已授权'}}</button>
+        <button class="btn" open-type="getUserInfo" bindgetuserinfo="getUserInfo">{{!isUserNameAuth?'点击授权':'已授权'}}</button>
       </view>
     </view>
   </view>

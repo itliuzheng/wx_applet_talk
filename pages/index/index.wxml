@@ -16,9 +16,12 @@
         </view>
         <!-- 正常回复 -->
         <view wx:else>
-          <view class="msg-content {{item.type === 'in' ? 'in' : 'out'}}">{{item.content}}</view>
+          <view bindlongtap="copyText" data-value="{{item.content}}" class="msg-content {{item.type === 'in' ? 'in' : 'out'}}">{{item.content}}</view>
         </view>
       </view>
+    </view>
+    <view class="reply-end" id="reply-end">
+      
     </view>
   </scroll-view>
 </view>

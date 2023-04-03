@@ -70,9 +70,6 @@ Page({
   },
   // 获取用户次数
   getUserInfoNumber(){
-    // app.openid()
-    console.log(1);
-    console.log(app.globalData.wxUser);
     app.api.wxUserAccountQueryCount({
       userId : app.globalData.wxUser.openid
     }).then(res=>{
@@ -106,13 +103,13 @@ Page({
     }
     
     let count = this.data.canUseCount;
-    if(count <= 0){
-      wx.showToast({
-        icon:'none',
-        title: '您当前次数已用光。'
-      })
-      return
-    }
+    // if(count <= 0){
+    //   wx.showToast({
+    //     icon:'none',
+    //     title: '您当前次数已用光。'
+    //   })
+    //   return
+    // }
     console.log(inputVal);
 
     // 将用户输入加入对话列表
@@ -139,6 +136,22 @@ Page({
     });
 
     this.apiChat(inputVal);
+  },
+  // 长按复制
+  copyText(e){
+    let value = e.currentTarget.dataset.value;
+    wx.setClipboardData({
+      data: value,
+      success(){
+        wx.getClipboardData({
+          success(){
+            wx.showToast({
+              title: '复制成功',
+            })
+          }
+        })
+      }
+    })
   },
   // 请求chat
   apiChat(inputVal){
@@ -167,14 +180,12 @@ Page({
   // 设置ai回复时，逐字显示动效 
   setReply(replyContent){
     const msgList = this.data.msgList;
-    // 回复的内容
-    // let replyContent = "你好，我是SMARTAI，最聪明的智能机器人，你可以问我任何问题，上至天文下至地理，我将知无不言言无不尽";
     // 字数动效起点
     var textIndex = 0;
     // 对话列表最后一组数据
     const lastMsgIndex = msgList.length - 1;
-
     var timer = setInterval(()=>{
+      // 回复的内容
       var text = replyContent.substring(0,textIndex);
       textIndex++;
       if(textIndex === 1){
@@ -191,18 +202,29 @@ Page({
       this.setData({
         msgList,
         btnText:'回复中',
-        scrollIntoView: `msg-item-${msgList.length - 1}`, // 滚动到最后一条消息
+        // scrollIntoView: `msg-item-${msgList.length - 1}`, // 滚动到最后一条消息
+        scrollIntoView: 'reply-end', // 滚动到最后一条消息
       });
       // 定时器结束
-      console.log(textIndex === replyContent.length);
-      if(textIndex === replyContent.length){
+      // console.log(textIndex === replyContent.length);
+      // if(textIndex >= 240){
+      if(textIndex >= replyContent.length || textIndex >= 2400){
         clearInterval(timer);
+        msgList[lastMsgIndex].content = replyContent;
         // 重新获取次数
         this.getUserInfoNumber();
         this.setData({
+          msgList,
           btnDisabled:true,
           btnText:'发送',
+          // scrollIntoView: `msg-item-${msgList.length - 1}`, // 滚动到最后一条消息
         });
+        setTimeout(()=>{
+        this.setData({
+          // 滚动到最后一条消息
+          scrollIntoView: 'reply-end'
+        });
+        },100)
       }
     },100)
   },
@@ -245,13 +267,13 @@ Page({
         })
 
         resolve({
-          title: '自定义转发标题1',
+          title: '已接入最新语言模型，天文地理无所不知',
           path: '/pages/index/index',
         })
       }, 500)
     })
     return {
-      title: '自定义转发标题',
+      title: '已接入最新语言模型，天文地理无所不知',
       path: '/pages/index/index',
       promise 
     }
