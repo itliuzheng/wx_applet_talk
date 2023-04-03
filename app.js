@@ -19,6 +19,7 @@ try {
 App({
   api: api,
   globalData: {
+    navBarHeight: 0 , // 底部导航栏高度
     thirdSession: _thirdSession,
     wxUser: _wxUser,
     config: __config,

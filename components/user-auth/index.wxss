@@ -1,5 +1,0 @@
-@import "/app.wxss";
-
-.bg-yuedu{
-  background-color: #475BF4;
-}

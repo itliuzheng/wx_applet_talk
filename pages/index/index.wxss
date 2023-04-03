@@ -108,7 +108,7 @@
   /* 固定在底部 */
   bottom: 0;
   width: 100%;
-  height: 150rpx;
+  min-height: 150rpx;
   padding: 11rpx 30rpx 16rpx 36rpx;
   background-color: #F5F5F5;
   border-top: 1rpx solid #E6E6E6;
@@ -133,10 +133,14 @@
   justify-content: flex-start;
   align-items: center;
 }
+.input-box-content .input-background {
+  padding: 0 16rpx;
+  background-color: #fff;
+}
 .input-box-content .input-box {
   width: 530rpx;
-  height: 64rpx;
-  padding: 0 16rpx;
+  min-height: 64rpx;
+  padding: 0;
   font-size: 28rpx;
   background-color: #fff;
   border: none;
@@ -157,4 +161,61 @@
 .input-box-content .btn[disabled] {
   background: rgba(21, 160, 133, 0.38);
   color: #fff;
+}
+/* 弹框样式 */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.modal-container {
+  width: 80%;
+  max-width: 480rpx;
+  background-color: #fff;
+  border-radius: 10rpx;
+  padding: 20rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.modal-title {
+  font-size: 18rpx;
+  font-weight: bold;
+  margin-bottom: 20rpx;
+}
+.modal-image-container {
+  width: 100%;
+  height: 300rpx;
+  margin-bottom: 20rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.modal-image {
+  width: 80%;
+  max-width: 320rpx;
+}
+.modal-footer {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20rpx;
+}
+.modal-footer .modal-button {
+  width: 40%;
+  height: 60rpx;
+  color: #fff;
+  border-radius: 10rpx;
+  font-size: 18rpx;
+  font-weight: bold;
+}
+.modal-footer .modal-button[type=primary] {
+  background-color: #15A085;
 }

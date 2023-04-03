@@ -33,10 +33,20 @@ Page({
     canUseCount:0, //可用次数
     chatId:null, // 会话id (首次可不传，后端返回，之后需要传，用于关联上下文)
     // btnText:'回复中', //按钮文字
+
+    scrollHeight: 0, // scroll-view的高度
+    keyboardHeight: 0 ,// 软键盘的高度
+    // 关注公众号弹窗
+    showModal: false
   },
 
   // 页面加载时，初始化 ChatGPT
   onLoad() {
+
+    const systemInfo = wx.getSystemInfoSync();
+    const tabBarHeight = systemInfo.screenHeight - systemInfo.windowHeight - systemInfo.statusBarHeight - 44;
+    app.globalData.navBarHeight = tabBarHeight;
+
     // 获取 ChatGPT 实例
     // this.chatGPT = OpenAI.createInstance({
     //   engine: 'davinci', // 使用 Davinci 引擎
@@ -48,7 +58,7 @@ Page({
   getInfo(){
     app.initPage()
     .then(()=>{
-      this.getUserInfoNumber();
+      // this.getUserInfoNumber();
     })
     setTimeout(()=>{
       let msgList = this.data.msgList;
@@ -66,6 +76,15 @@ Page({
         msgList,
         scrollIntoView: 'reply-end', // 滚动到最后一条消息
       })
+
+      // 获取消息容器高度
+      var self = this;
+      wx.createSelectorQuery().select('#msg-list').boundingClientRect(function (rect) {
+        self.setData({
+          // scrollHeight: rect.height // 使用data更新scrollHeight，方便wxml中调用
+          scrollHeight: wx.getSystemInfoSync().windowHeight // 使用data更新scrollHeight，方便wxml中调用
+        });
+      }).exec();
     },500)
   },
   // 获取用户次数
@@ -73,13 +92,11 @@ Page({
     app.api.wxUserAccountQueryCount({
       userId : app.globalData.wxUser.openid
     }).then(res=>{
-      console.log(res);
       this.setData({
         canUseCount:res.data
       })
     })
     .catch(()=>{
-      console.log('fail');
     })
   },
   // 处理用户输入
@@ -276,5 +293,64 @@ Page({
       path: '/pages/index/index',
       promise 
     }
+  },
+  // 点击“显示二维码”按钮时触发的事件处理函数
+  onButtonClick: function() {
+    this.setData({
+      showModal: true
+    });
+  },
+  // 点击弹框中的“关闭”按钮时触发的事件处理函数
+  onModalClose: function() {
+    this.setData({
+      showModal: false
+    });
+  },
+  // 调起相机 扫描
+  onScanCodeTap: function () {
+    wx.scanCode({
+      success: function (res) {
+        wx.showModal({
+          title: '关注公众号',
+          content: '关注公众号成功',
+          showCancel: false,
+          success: function () {
+            // TODO: 引导用户进入公众号页面进行关注
+          }
+        })
+      },
+      fail: function () {
+        wx.showToast({
+          title: '扫码失败，请重试',
+          icon: 'none'
+        })
+      }
+    })
+  },
+  onKeyboardHeightChange: function (e) {
+    // return false;
+    console.log('监听软键盘高度变化，更新scroll-view的高度和scrollTop');
+    // 监听软键盘高度变化，更新scroll-view的高度和scrollTop
+    var self = this;
+    var {height} = e.detail;
+    console.log(wx.getSystemInfoSync().windowHeight - height);
+    const navBarHeight = app.globalData.navBarHeight;
+    // const windowHeight = wx.getSystemInfoSync().windowHeight;
+    // const inputBottom = navBarHeight + (windowHeight - navBarHeight - 40) / 2;
+
+    const inputBottom = height - navBarHeight >= 0 ? height - navBarHeight :0;
+    console.log(navBarHeight);
+
+    self.setData({
+      keyboardHeight: inputBottom, // 同步更新data中的keyboardHeight
+      // scrollHeight: wx.getSystemInfoSync().windowHeight - height // 更新scroll-view的高度
+    });
+    // wx.nextTick(function () {
+    //   console.log('nextTick');
+    //   console.log(self.data.scrollHeight);
+    //   wx.pageScrollTo({ // 滚动到底部
+    //     scrollTop: self.data.scrollHeight
+    //   });
+    // });
   },
 })

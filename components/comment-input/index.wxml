@@ -1,0 +1,24 @@
+
+<view class="comment-box" catchtouchmove="true" hidden="{{!showModal}}" catchtap="closeFun">
+  <view class="comment-form" catchtap="commentForm">
+    <form class="form" bindsubmit="commentInput">
+      <view class="comment-content">
+        <!-- <textarea class="comment-input" 	placeholder-class="comment-input-placeholder" fixed="{{true}}" type="text" value="{{content}}" name="content" focus="{{commentFocus}}" cursor-spacing="60" placeholder="写下你此刻的想法…" /> -->
+        <view class="comment-textarea">
+          <textarea 
+            class="comment-input" 
+            type="text" 
+            value="{{content}}" 
+            name="content" 
+            show-confirm-bar="{{false}}"
+            focus="{{commentFocus}}" 
+            cursor-spacing="60" 
+            maxlength="-1"
+            auto-height
+            placeholder="{{placeholder}}" />
+        </view>
+        <button form-type="submit" class="comment-btn" >发表</button>
+      </view>
+    </form>
+  </view>
+</view>

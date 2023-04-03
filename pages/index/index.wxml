@@ -1,35 +1,67 @@
 <view class="container">
   <scroll-view class="msg-list" 
+    style="height: {{scrollHeight}}px"
     scroll-y="true" 
     scroll-animation-duration
     scroll-into-view="{{scrollIntoView}}">
-    <view class="time">{{messageTime}}</view>
-    <view wx:for="{{msgList}}" wx:key="index">
-      <view id="msg-item-{{index}}" class="msg-item {{item.type === 'in' ? 'in' : 'out'}} {{item.result === 'loading'?'loading':''}}">
-        <image class="avatar {{item.type === 'in' ? 'in' : 'out'}}" src="{{item.avatar}}"></image>
-        <!-- 如果服务器连接失败，则显示重试按钮 -->
-        <view wx:if="{{item.result === 'error'}}" data-input-val="{{item.inputVal}}" bindtap="resendApi">
-          <view class="msg-content msg-content-error {{item.type === 'in' ? 'in' : 'out'}}">
-            <view class="msg-reply">{{item.content}}</view>
-            <image class="error-reload-img" src="/public/img/message/reload.png"></image>
+    <view  id="msg-list">
+      <view class="time">{{messageTime}}</view>
+      <view wx:for="{{msgList}}" wx:key="index">
+        <view id="msg-item-{{index}}" class="msg-item {{item.type === 'in' ? 'in' : 'out'}} {{item.result === 'loading'?'loading':''}}">
+          <image class="avatar {{item.type === 'in' ? 'in' : 'out'}}" src="{{item.avatar}}"></image>
+          <!-- 如果服务器连接失败，则显示重试按钮 -->
+          <view wx:if="{{item.result === 'error'}}" data-input-val="{{item.inputVal}}" bindtap="resendApi">
+            <view class="msg-content msg-content-error {{item.type === 'in' ? 'in' : 'out'}}">
+              <view class="msg-reply">{{item.content}}</view>
+              <image class="error-reload-img" src="/public/img/message/reload.png"></image>
+            </view>
+          </view>
+          <!-- 正常回复 -->
+          <view wx:else>
+            <view bindlongtap="copyText" data-value="{{item.content}}" class="msg-content {{item.type === 'in' ? 'in' : 'out'}}">{{item.content}}</view>
           </view>
         </view>
-        <!-- 正常回复 -->
-        <view wx:else>
-          <view bindlongtap="copyText" data-value="{{item.content}}" class="msg-content {{item.type === 'in' ? 'in' : 'out'}}">{{item.content}}</view>
-        </view>
       </view>
-    </view>
-    <view class="reply-end" id="reply-end">
-      
+      <view class="reply-end" id="reply-end"></view>
     </view>
   </scroll-view>
 </view>
-<view class="input-box-wrapper">
- <view class="remark">*今日可用次数：{{canUseCount}}次，<button open-type="share" class="blue">关注公众号</button>解锁更多次数</view>
+<!-- keyboardHeight -->
+<view class="input-box-wrapper" style="bottom:{{keyboardHeight}}px">
+ <view class="remark">*今日可用次数：{{canUseCount}}次，<button bindtap="onButtonClick" class="blue">关注公众号</button>解锁更多次数</view>
  <view class="input-box-content">
-   <input class="input-box" value="{{inputVal}}" placeholder="" bindinput="onInput"/>
+   <!-- <input class="input-box" 	adjust-position="{{false}}" value="{{inputVal}}" placeholder="" bindinput="onInput"/> -->
+  <view class="input-background">
+   <textarea 
+            class="input-box" 
+            type="text" 
+            value="{{inputVal}}" 
+            adjust-position="{{false}}"
+            bindinput="onInput"
+            name="content" 
+            show-confirm-bar="{{false}}"
+            cursor-spacing="60" 
+            maxlength="-1"
+            auto-height
+            bindkeyboardheightchange="onKeyboardHeightChange"
+            placeholder="{{placeholder}}" />
+  </view>
+
    <button class="btn" type="primary" bindtap="onSend" disabled="{{btnDisabled}}">{{btnText}}</button>
    <!-- <view class="btn" bindtap="onSend">发送</view> -->
  </view>
 </view>
+
+ <!-- 显示弹框 -->
+ <view class="modal" wx:if="{{ showModal }}">
+    <view class="modal-container">
+      <view class="modal-title">扫描二维码关注公众号</view>
+      <view class="modal-image-container">
+        <image class="modal-image" src="/public/img/myself/qrcode.jpg" 	show-menu-by-longpress="{{true}}" mode="aspectFit"></image>
+      </view>
+      <view class="modal-footer">
+        <button class="modal-button" type="primary" bindtap="onScanCodeTap">扫描</button>
+        <button class="modal-button" type="default" bindtap="onModalClose">关闭</button>
+      </view>
+    </view>
+  </view>
