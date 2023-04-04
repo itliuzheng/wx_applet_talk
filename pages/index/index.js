@@ -243,8 +243,14 @@ Page({
       inputVal: '',
       btnDisabled: true,
       btnText:'回复中',
-      scrollIntoView: 'reply-end', // 滚动到最后一条消息
     });
+
+    setTimeout(()=>{
+      this.setData({
+        // 滚动到最后一条消息
+        scrollIntoView: 'reply-end'
+      });
+    },70)
 
     this.apiChat(inputVal);
     //todo 测试
@@ -282,7 +288,8 @@ Page({
       chatId: this.data.chatId
     })
     .then(res=>{
-      console.log(res);
+      // 重新获取次数
+      this.getUserInfoNumber();
       if(res.errorCode === '0000'){
         this.setData({
           chatId: res.data.chatId,
@@ -298,6 +305,8 @@ Page({
       }
     })
     .catch(()=>{
+      // 重新获取次数
+      this.getUserInfoNumber();
       this.replyError(inputVal);
     })
   },
@@ -340,8 +349,6 @@ Page({
         msgList[lastMsgIndex].content = replyContent;
         msgList[lastMsgIndex].time = new Date();;
         
-        // 重新获取次数
-        this.getUserInfoNumber();
         this.setData({
           msgList : this.filterReplyDom(msgList),
           btnDisabled:true,
@@ -389,7 +396,6 @@ Page({
       btnText:'发送',
       scrollIntoView: 'reply-end', // 滚动到最后一条消息
     });
-    this.getUserInfoNumber();
   },
   // 重发请求
   resendApi(e){
