@@ -1,6 +1,8 @@
 var app = getApp();
 // const OpenAI = requirePlugin('openai-plugin');
 const { getMessageTime } = require('../../utils/dateUtil');
+//在使用的View中引入WxParse模块
+var WxParse = require("../../public/wxParse/wxParse.js");
 
 Page({
   data: {
@@ -37,6 +39,7 @@ Page({
 
     scrollHeight: 0, // scroll-view的高度
     keyboardHeight: 0 ,// 软键盘的高度
+    height: 32, // 初始高度为 32px
     // 关注公众号弹窗
     showModal: false
   },
@@ -95,19 +98,34 @@ Page({
     })
     setTimeout(()=>{
       let msgList = this.data.msgList;
+      let chatId = null;
+      try {
+        var value = wx.getStorageSync('smartai_reply_list');
+        chatId = wx.getStorageSync('smartai_reply_chatId');
+        if (value) {
+          msgList = value;
+        }
+      } catch (e) {
+        // Do something when catch error
+      }
+      
+      console.log(msgList);
+
       if(this.data.msgList.length === 0){
         msgList.push({
           type: 'in',
           content: '你好，我是SMARTAI，最聪明的智能机器人，已接入最新的语言模型，我每天都会为你提供3次免费机会，关注公众号+6次，分享好友+3次，分享朋友圈+3次，活动期间每天免费获取上限20次，更多次数可关注公众号获取',
           avatar:'/public/img/logo/smartai-logo.png',
-          result:'success'
+          result:'success',
+          time: new Date()
         })
       }
       let time = msgList[msgList.length - 1].time;
       this.setData({
         messageTime:getMessageTime(time?time:new Date()),
-        msgList,
+        msgList : this.filterReplyDom(msgList),
         scrollIntoView: 'reply-end', // 滚动到最后一条消息
+        chatId:chatId
       })
 
       // 获取消息容器高度
@@ -143,9 +161,27 @@ Page({
       inputVal: value,
       btnDisabled
     });
+    this.setHeight(e.detail.value);
+  },
+  // 在这段代码中，我们首先通过 wx.createSelectorQuery().select('.textarea').boundingClientRect 获取到 textarea 组件的 boundingClientRect 对象，从而得到其高度。然后，根据行高、最大行数、最小高度等因素计算出 textarea 的最终高度，并将其更新到 height 变量中
+  setHeight: function(value) {
+    // 计算 textarea 的高度
+    wx.createSelectorQuery().select('.input-box').boundingClientRect(res => {
+      let lineHeight = 14 // 行高
+      let maxLine = 5 // 最大行数
+      let minHeight = this.data.height // 最小高度
+      let height = res.height
+      let lines = Math.ceil(height / lineHeight)
+      height = Math.min(lines * lineHeight, maxLine * lineHeight)
+      height = Math.max(height, minHeight)
+      if (height !== this.data.height) { // 高度发生变化时才更新
+        this.setData({ height })
+      }
+    }).exec()
   },
   // 处理用户点击发送按钮
   onSend() {
+    let that = this;
     console.log(this.data.inputVal);
     const inputVal = this.data.inputVal.trim();
     if (!inputVal) {
@@ -169,7 +205,8 @@ Page({
       type: 'out',
       content: inputVal,
       avatar: wxUser.headimgUrl?wxUser.headimgUrl:'/public/img/logo/smartai-logo.png',
-      result: 'success'
+      result: 'success',
+      time:new Date()
     });
     // 在用户发送消息且服务器未返回内容时，显示
     msgList.push({
@@ -178,8 +215,10 @@ Page({
       avatar:'/public/img/logo/smartai-logo.png',
       result: 'loading'
     });
+
+    
     this.setData({
-      msgList,
+      msgList : this.filterReplyDom(msgList),
       inputVal: '',
       btnDisabled: true,
       btnText:'回复中',
@@ -188,33 +227,31 @@ Page({
 
     this.apiChat(inputVal);
     //todo 测试
-    // this.setReply(`清明节是我国传统的重要节日，是祭祀先人的节日。每年的清明节，人们会烧纸、祭拜祖先、扫墓、踏青等，表达对逝去亲人的思念和缅怀之情。
+    // let string = `<p>清明节是我国传统的重要节日</p>，<h1>是祭祀先人的节日</h1>。`
+    // let string = "Sure, here's a SQL statement to create a table for student names and ages:```CREATE TABLE students (id INT PRIMARY KEY,name VARCHAR(50 NOT NULL,  age INT NOT NULL );```This will create a table called `students` with columns for `id`, `name`, and `age`. The `id` column will be the primary key, and the `name` and `age` columns will be required (i.e. NOT NULL). You can insert data into this table using the INSERT statement:```  INSERT INTO students (name, age) VALUES ('John Doe', 22); INSERT INTO students (name, age) VALUES ('Jane Smith', 20);```And you can retrieve data from the table using the SELECT statement:```SELECT name, age FROM students;```This will return a list of all the names and ages in the table."
+    // console.log(this.data.chatId);
 
-    // 清明节的起源可以追溯到古代，最早起源于周代。周代的葬俗十分严谨，每年春季，人们会前往祖坟祭拜祖先，扫墓、添香、烧纸、献花等，以表达对逝去亲人的哀思和尊敬。后来，清明节逐渐演变为一个全民性的祭祀节日。
-    
-    // 如今，清明节已经成为了一个家庭团聚、缅怀先人的节日。在这一天，人们会提前准备好食品、鲜花、烛台等，前往祖坟，扫墓、献花、点烛，向逝去的亲人表达哀思和思念。同时，也是一个踏青游玩的好时机，人们会前往郊外或公园，欣赏春景、赏花、游玩。
-    
-    // 清明节的重要意义在于传承家族文化，缅怀先人，继承先人的遗志和家风。同时，也是一个净化心灵、追寻自然的节日，让人们重新审视生命的意义和价值。
-    
-    // 在缅怀先人的过程中，我们要深刻体会到生命的短暂和珍贵，珍惜眼前的一切，更要懂得尊重生命和关注生命。在生活中，我们要尽可能地为家庭、为社会、为他人做出贡献，成为一个有价值、有意义的人。
-    
-    // 总之，清明节是一个重要的传统节日，是人们缅怀先人、传承家族文化、追寻生命意义的时刻。让我们一起珍惜眼前的一切，尊重生`)
+    // try {
+    //   wx.setStorageSync('smartai_reply_chatId', '123123123');
+    // } catch (e) { }
+    // this.setReply(string)
   },
-  // 长按复制
-  copyText(e){
-    let value = e.currentTarget.dataset.value;
-    wx.setClipboardData({
-      data: value,
-      success(){
-        wx.getClipboardData({
-          success(){
-            wx.showToast({
-              title: '复制成功',
-            })
-          }
-        })
+  filterReplyDom(msgList){
+    let that = this;
+    //wxParse多数据循环绑定
+    if (msgList.length > 0) {
+      for (let i = 0; i < msgList.length; i++) {
+        WxParse.wxParse('reply' + i, 'html', msgList[i].content, that);
+        if (i === msgList.length - 1) {
+          WxParse.wxParseTemArray("replyOptionArray", 'reply', msgList.length, that)
+        }
       }
-    })
+      let listArr = that.data.replyOptionArray;
+      listArr.forEach((item, index) => {
+        msgList[index].domContent = item;
+      })
+    }
+    return msgList;
   },
   // 请求chat
   apiChat(inputVal){
@@ -229,6 +266,9 @@ Page({
         this.setData({
           chatId: res.data.chatId,
         });
+        try {
+          wx.setStorageSync('smartai_reply_chatId', res.data.chatId);
+        } catch (e) { }
         // 成功
         this.setReply(res.data.context);
       }else{
@@ -250,36 +290,47 @@ Page({
     var timer = setInterval(()=>{
       // 回复的内容
       var text = replyContent.substring(0,textIndex);
+      
       textIndex++;
       if(textIndex === 1){
         msgList[lastMsgIndex] = {
           type: 'in',
           content: text,
           avatar:'/public/img/logo/smartai-logo.png',
-          result:'success'
+          result:'success',
+          chatId: this.data.chatId,
         }
-        // msgList.push();
+        
       }else{
         msgList[lastMsgIndex].content = text;
       }
+
+
       this.setData({
-        msgList,
+        msgList : this.filterReplyDom(msgList),
         btnText:'回复中',
         scrollIntoView: 'reply-end', // 滚动到最后一条消息
       });
       // 定时器结束
       // console.log(textIndex === replyContent.length);
       // if(textIndex >= 240){
-      if(textIndex >= replyContent.length || textIndex >= 2400){
+      if(textIndex >= replyContent.length || textIndex >= 1000){
         clearInterval(timer);
         msgList[lastMsgIndex].content = replyContent;
+        msgList[lastMsgIndex].time = new Date();;
+        
         // 重新获取次数
         this.getUserInfoNumber();
         this.setData({
-          msgList,
+          msgList : this.filterReplyDom(msgList),
           btnDisabled:true,
           btnText:'发送',
         });
+        // 将回复列表进行存储
+        try {
+          wx.setStorageSync('smartai_reply_list', msgList);
+        } catch (e) { }
+
         setTimeout(()=>{
           this.setData({
             // 滚动到最后一条消息
@@ -346,36 +397,14 @@ Page({
       showModal: true
     });
   },
-  // 点击弹框中的“关闭”按钮时触发的事件处理函数
-  onModalClose: function() {
+  // 关闭弹框
+  closeModal(){
     this.setData({
-      showModal: false
-    });
-  },
-  // 调起相机 扫描
-  onScanCodeTap: function () {
-    wx.scanCode({
-      success: function (res) {
-        wx.showModal({
-          title: '关注公众号',
-          content: '关注公众号成功',
-          showCancel: false,
-          success: function () {
-            // TODO: 引导用户进入公众号页面进行关注
-          }
-        })
-      },
-      fail: function () {
-        wx.showToast({
-          title: '扫码失败，请重试',
-          icon: 'none'
-        })
-      }
+      showModal:false
     })
   },
+  // 监听软键盘高度变化，更新scroll-view的高度和scrollTop
   onKeyboardHeightChange: function (e) {
-    // return false;
-    console.log('监听软键盘高度变化，更新scroll-view的高度和scrollTop');
     // 监听软键盘高度变化，更新scroll-view的高度和scrollTop
     var self = this;
     var {height} = e.detail;
@@ -399,9 +428,20 @@ Page({
     //   });
     // });
   },
-  closeModal(){
-    this.setData({
-      showModal:false
+  // 长按复制
+  copyText(e){
+    let value = e.currentTarget.dataset.value;
+    wx.setClipboardData({
+      data: value,
+      success(){
+        wx.getClipboardData({
+          success(){
+            wx.showToast({
+              title: '复制成功',
+            })
+          }
+        })
+      }
     })
   },
 })

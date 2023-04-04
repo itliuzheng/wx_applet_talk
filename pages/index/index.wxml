@@ -18,7 +18,15 @@
           </view>
           <!-- 正常回复 -->
           <view wx:else>
-            <view bindlongtap="copyText" data-value="{{item.content}}" class="msg-content {{item.type === 'in' ? 'in' : 'out'}}">{{item.content}}</view>
+            <view bindlongtap="copyText" data-value="{{item.content}}" class="msg-content {{item.type === 'in' ? 'in' : 'out'}}">
+            <!-- {{item.content}} -->
+              <!-- <view class="markdown" wx:if="{{item.type === 'in'}}"> -->
+
+                <import src="/public/wxParse/wxParse.wxml"/>
+                <template is="wxParse" data="{{wxParseData:item.domContent}}"></template>
+
+              <!-- <view wx:else>{{item.content}}</view> -->
+            </view>
           </view>
         </view>
       </view>
@@ -34,6 +42,7 @@
   <view class="input-background">
    <textarea 
             class="input-box" 
+            style="height:{{height}}px;"
             type="text" 
             value="{{inputVal}}" 
             adjust-position="{{false}}"
