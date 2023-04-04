@@ -246,16 +246,16 @@ Page({
       scrollIntoView: 'reply-end', // 滚动到最后一条消息
     });
 
-    // this.apiChat(inputVal);
+    this.apiChat(inputVal);
     //todo 测试
-    let string = `<p>清明节是我国传统的重要节日</p>，<h1>是祭祀先人的节日</h1>。`
+    // let string = `<p>清明节是我国传统的重要节日</p>，<h1>是祭祀先人的节日</h1>。`
     // let string = "Sure, here's a SQL statement to create a table for student names and ages:```CREATE TABLE students (id INT PRIMARY KEY,name VARCHAR(50 NOT NULL,  age INT NOT NULL );```This will create a table called `students` with columns for `id`, `name`, and `age`. The `id` column will be the primary key, and the `name` and `age` columns will be required (i.e. NOT NULL). You can insert data into this table using the INSERT statement:```  INSERT INTO students (name, age) VALUES ('John Doe', 22); INSERT INTO students (name, age) VALUES ('Jane Smith', 20);```And you can retrieve data from the table using the SELECT statement:```SELECT name, age FROM students;```This will return a list of all the names and ages in the table."
     // console.log(this.data.chatId);
 
-    try {
-      wx.setStorageSync('smartai_reply_chatId', '123123123');
-    } catch (e) { }
-    this.setReply(string)
+    // try {
+    //   wx.setStorageSync('smartai_reply_chatId', '123123123');
+    // } catch (e) { }
+    // this.setReply(string)
   },
   filterReplyDom(msgList){
     let that = this;
