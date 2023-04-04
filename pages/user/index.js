@@ -123,7 +123,6 @@ Page({
   },
   
   share() {
-    console.log(1);
     wx.showShareMenu({
       withShareTicket: true,
       menus: ['shareAppMessage', 'shareTimeline'],

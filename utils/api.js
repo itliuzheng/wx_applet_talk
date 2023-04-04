@@ -64,7 +64,7 @@ module.exports = {
    * } 
    */
   wxUserAccountQueryCount: (data) => {
-    return request('/userAccount/queryCount', 'post', data, true)
+    return request('/userAccount/queryCount', 'post', data, false)
   },
   /**
    * 次数变更
@@ -100,6 +100,6 @@ module.exports = {
    * }
    */
   wxUserAccountQueryUserInfo: (data) => {
-    return request('/userAccount/queryUserInfo', 'post', data, true)
+    return request('/userAccount/queryUserInfo', 'post', data, false)
   },
 }

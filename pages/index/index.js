@@ -115,7 +115,7 @@ Page({
       wx.createSelectorQuery().select('#msg-list').boundingClientRect(function (rect) {
         self.setData({
           // scrollHeight: rect.height // 使用data更新scrollHeight，方便wxml中调用
-          scrollHeight: wx.getSystemInfoSync().windowHeight // 使用data更新scrollHeight，方便wxml中调用
+          scrollHeight: wx.getSystemInfoSync().windowHeight - 75 // 使用data更新scrollHeight，方便wxml中调用
         });
       }).exec();
     },500)
@@ -185,7 +185,20 @@ Page({
       btnText:'回复中',
       scrollIntoView: 'reply-end', // 滚动到最后一条消息
     });
+
     this.apiChat(inputVal);
+    //todo 测试
+    // this.setReply(`清明节是我国传统的重要节日，是祭祀先人的节日。每年的清明节，人们会烧纸、祭拜祖先、扫墓、踏青等，表达对逝去亲人的思念和缅怀之情。
+
+    // 清明节的起源可以追溯到古代，最早起源于周代。周代的葬俗十分严谨，每年春季，人们会前往祖坟祭拜祖先，扫墓、添香、烧纸、献花等，以表达对逝去亲人的哀思和尊敬。后来，清明节逐渐演变为一个全民性的祭祀节日。
+    
+    // 如今，清明节已经成为了一个家庭团聚、缅怀先人的节日。在这一天，人们会提前准备好食品、鲜花、烛台等，前往祖坟，扫墓、献花、点烛，向逝去的亲人表达哀思和思念。同时，也是一个踏青游玩的好时机，人们会前往郊外或公园，欣赏春景、赏花、游玩。
+    
+    // 清明节的重要意义在于传承家族文化，缅怀先人，继承先人的遗志和家风。同时，也是一个净化心灵、追寻自然的节日，让人们重新审视生命的意义和价值。
+    
+    // 在缅怀先人的过程中，我们要深刻体会到生命的短暂和珍贵，珍惜眼前的一切，更要懂得尊重生命和关注生命。在生活中，我们要尽可能地为家庭、为社会、为他人做出贡献，成为一个有价值、有意义的人。
+    
+    // 总之，清明节是一个重要的传统节日，是人们缅怀先人、传承家族文化、追寻生命意义的时刻。让我们一起珍惜眼前的一切，尊重生`)
   },
   // 长按复制
   copyText(e){
@@ -272,9 +285,9 @@ Page({
             // 滚动到最后一条消息
             scrollIntoView: 'reply-end'
           });
-        },100)
+        },70)
       }
-    },100)
+    },70)
   },
   // 回复失败
   replyError(inputVal){
