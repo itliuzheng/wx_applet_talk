@@ -17,6 +17,7 @@ Page({
     showModal: false
   },
   onShow() {
+    console.log('myself-show');
     this.getUserInit();
 
   },
@@ -197,6 +198,11 @@ Page({
     this.setData({
       showModal: true
     });
+  },
+  closeModal(){
+    this.setData({
+      showModal:false
+    })
   },
   // 点击弹框中的“关闭”按钮时触发的事件处理函数
   onModalClose: function() {

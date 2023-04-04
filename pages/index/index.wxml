@@ -46,22 +46,10 @@
             bindkeyboardheightchange="onKeyboardHeightChange"
             placeholder="{{placeholder}}" />
   </view>
-
    <button class="btn" type="primary" bindtap="onSend" disabled="{{btnDisabled}}">{{btnText}}</button>
    <!-- <view class="btn" bindtap="onSend">发送</view> -->
  </view>
 </view>
 
- <!-- 显示弹框 -->
- <view class="modal" wx:if="{{ showModal }}">
-    <view class="modal-container">
-      <view class="modal-title">扫描二维码关注公众号</view>
-      <view class="modal-image-container">
-        <image class="modal-image" src="/public/img/myself/qrcode.jpg" 	show-menu-by-longpress="{{true}}" mode="aspectFit"></image>
-      </view>
-      <view class="modal-footer">
-        <button class="modal-button" type="primary" bindtap="onScanCodeTap">扫描</button>
-        <button class="modal-button" type="default" bindtap="onModalClose">关闭</button>
-      </view>
-    </view>
-  </view>
+ <!-- 扫描二维码关注公众号-弹框 -->
+  <official-account-dialog wx:if="{{showModal}}" bindshowDialog="closeModal"></official-account-dialog>

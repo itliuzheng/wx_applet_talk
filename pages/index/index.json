@@ -5,5 +5,6 @@
   "navigationBarTextStyle": "black",
   "enablePullDownRefresh":false,
   "usingComponents": {
+    "official-account-dialog" : "/components/officialAccountDialog/index"
   }
 }

@@ -24,7 +24,6 @@ module.exports = (url, method, data, showLoading) => {
         'third-session': getApp().globalData.thirdSession != null ? getApp().globalData.thirdSession : ''
       },
       success(res) {
-        console.log(res);
         if (res.statusCode == 200) {
           if (res.data.errorCode != '0000') {
             // console.log(res.data)
@@ -37,7 +36,6 @@ module.exports = (url, method, data, showLoading) => {
                 })
               })
             }else{
-              console.log('res.data',res.data);
               if(res.data.msg === '用戶不存在'){
                 wx.clearStorageSync();
                 getApp().globalData.thirdSession = null;
@@ -81,7 +79,6 @@ module.exports = (url, method, data, showLoading) => {
           })
           reject()
         } else {
-          console.log(res)
           wx.showModal({
             title: '提示',
             content: res.errMsg + ':' + res.data.message + ':' + res.data.msg,

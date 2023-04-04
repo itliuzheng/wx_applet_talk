@@ -1,0 +1,62 @@
+.modal_new {
+  width: 100%;
+  height: 100%;
+  min-height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 99999;
+}
+.modal_new .close_btn {
+  position: absolute;
+  bottom: 100rpx;
+  left: 50%;
+  width: 80rpx;
+  height: 80rpx;
+  z-index: 1;
+  transform: translate(-50%, 0);
+}
+.new_shop_box {
+  position: absolute;
+  width: 536rpx;
+  padding-bottom: 80rpx;
+  background: #FFFFFF;
+  border-radius: 20rpx;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+.new_shop_box .title {
+  width: 100%;
+  height: 54rpx;
+  font-size: 36rpx;
+  font-weight: 500;
+  color: #000000;
+  line-height: 54rpx;
+  text-align: center;
+  margin-top: 40rpx;
+}
+.new_shop_box .desc {
+  width: 470rpx;
+  height: 80rpx;
+  font-size: 28rpx;
+  font-weight: 400;
+  color: #000000;
+  line-height: 40rpx;
+  margin: 20rpx auto 0;
+}
+.new_shop_box .qrcode {
+  width: 280rpx;
+  height: 280rpx;
+  margin: 20rpx auto 0;
+  display: block;
+}
+.modal_ {
+  width: 100%;
+  height: 100%;
+  background: #000000;
+  position: fixed;
+  top: 0;
+  z-index: 99998;
+  opacity: 0.6;
+}

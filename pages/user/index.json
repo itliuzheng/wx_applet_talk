@@ -2,5 +2,6 @@
   "navigationBarBackgroundColor": "#fff",
   "navigationBarTitleText": "我的",
   "usingComponents": {
+    "official-account-dialog" : "/components/officialAccountDialog/index"
   }
 }

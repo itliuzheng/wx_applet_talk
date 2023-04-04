@@ -133,8 +133,6 @@ App({
               })
               .then(res => {
                 
-                console.log(res);
-
                 wx.hideLoading()
                 let wxUser = res.data;
                 that.globalData.thirdSession = wxUser.session_key;

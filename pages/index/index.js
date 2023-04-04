@@ -24,6 +24,7 @@ Page({
       //   result: 'success'
       // },
     ], // 对话列表
+    wxUser:{},
     scrollIntoView: '', // 滚动到的位置
     inputVal: '', // 输入框内容
     chatGPT:null,
@@ -54,11 +55,43 @@ Page({
     // });
     this.getInfo();
   },
+  onShow(){
+    console.log('show');
+    this.getUserInfo();
+  },
+
+  // 获取用户信息
+  getUserInfo() {
+
+    app.initPage()
+    .then(()=>{
+      app.api.wxUserAccountQueryUserInfo({
+        userId : app.globalData.wxUser.openid
+      })
+      .then((res)=>{
+        if(res.errorCode === '0000'){
+          let wxUser = this.data.wxUser;
+          if(res.data.viaUrl){
+            wxUser.headimgUrl = res.data.viaUrl;
+          }
+          if(res.data.userName){
+            wxUser.nickName = res.data.userName;
+          }
+          this.setData({
+            wxUser,
+            isAvatarAuth: !!res.data.viaUrl,
+            isUserNameAuth: !!res.data.userName
+          })
+        }
+        this.getUserInfoNumber();
+      })
+    })
+  },
   // 初始化，获取对话信息
   getInfo(){
     app.initPage()
     .then(()=>{
-      // this.getUserInfoNumber();
+      this.getUserInfo();
     })
     setTimeout(()=>{
       let msgList = this.data.msgList;
@@ -120,21 +153,22 @@ Page({
     }
     
     let count = this.data.canUseCount;
-    // if(count <= 0){
-    //   wx.showToast({
-    //     icon:'none',
-    //     title: '您当前次数已用光。'
-    //   })
-    //   return
-    // }
-    console.log(inputVal);
+    if(count <= 0){
+      wx.showToast({
+        icon:'none',
+        title: '您当前次数已用光。'
+      })
+      return
+    }
 
+    let wxUser = this.data.wxUser;
+    console.log(wxUser.headimgUrl);
     // 将用户输入加入对话列表
     const msgList = this.data.msgList;
     msgList.push({
       type: 'out',
       content: inputVal,
-      avatar:'/public/img/logo/smartai-logo.png',
+      avatar: wxUser.headimgUrl?wxUser.headimgUrl:'/public/img/logo/smartai-logo.png',
       result: 'success'
     });
     // 在用户发送消息且服务器未返回内容时，显示
@@ -151,7 +185,6 @@ Page({
       btnText:'回复中',
       scrollIntoView: 'reply-end', // 滚动到最后一条消息
     });
-
     this.apiChat(inputVal);
   },
   // 长按复制
@@ -352,5 +385,10 @@ Page({
     //     scrollTop: self.data.scrollHeight
     //   });
     // });
+  },
+  closeModal(){
+    this.setData({
+      showModal:false
+    })
   },
 })

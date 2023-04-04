@@ -1,0 +1,10 @@
+<!-- 页面的广告图片 -->
+<view class="modal_new" wx:if="{{modal_status}}">
+	<image class="close_btn" src="/public/img/close_white.png" 	bindtap="close_btn"></image>
+	<view class="new_shop_box">
+		<view class="title">长按扫描二维码关注公众号</view>
+		<image class="qrcode" show-menu-by-longpress="{{true}}" src="/public/img/myself/qrcode.jpg"></image>
+	</view>
+</view>
+<!-- 灰色背景颜色 -->
+<view class="modal_" bindtap="modal_btn" wx:if='{{modal_status2}}'></view>
