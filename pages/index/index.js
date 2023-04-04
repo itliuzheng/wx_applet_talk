@@ -1,11 +1,13 @@
 var app = getApp();
 // const OpenAI = requirePlugin('openai-plugin');
 const { getMessageTime } = require('../../utils/dateUtil');
+const { formatDate } = require('../../utils/util');
 //在使用的View中引入WxParse模块
 var WxParse = require("../../public/wxParse/wxParse.js");
 
 Page({
   data: {
+    historyList:[],
     msgList: [
       // {
       //   type:'in',
@@ -97,21 +99,35 @@ Page({
       this.getUserInfo();
     })
     setTimeout(()=>{
+      let historyList = this.data.historyList;
       let msgList = this.data.msgList;
       let chatId = null;
       try {
-        var value = wx.getStorageSync('smartai_reply_list');
+        var value = wx.getStorageSync('smartai_reply_key');
         chatId = wx.getStorageSync('smartai_reply_chatId');
+
+        // wx.setStorageSync('smartai_reply_key', key);
+        // wx.setStorageSync('smartai_reply_'+keyName, msgList);
+
         if (value) {
-          msgList = value;
+          console.log(value);
+          value.forEach(item=>{
+            var list = wx.getStorageSync('smartai_reply_' + item);
+            historyList.push({
+              time:getMessageTime(list[list.length - 1].time),
+              list
+            })
+          })
+          console.log(historyList);
+          // historyList = value;
         }
       } catch (e) {
         // Do something when catch error
       }
       
-      console.log(msgList);
+      console.log(historyList);
 
-      if(this.data.msgList.length === 0){
+      if(msgList.length === 0){
         msgList.push({
           type: 'in',
           content: '你好，我是SMARTAI，最聪明的智能机器人，已接入最新的语言模型，我每天都会为你提供3次免费机会，关注公众号+6次，分享好友+3次，分享朋友圈+3次，活动期间每天免费获取上限20次，更多次数可关注公众号获取',
@@ -122,6 +138,7 @@ Page({
       }
       let time = msgList[msgList.length - 1].time;
       this.setData({
+        historyList,
         messageTime:getMessageTime(time?time:new Date()),
         msgList : this.filterReplyDom(msgList),
         scrollIntoView: 'reply-end', // 滚动到最后一条消息
@@ -208,6 +225,7 @@ Page({
       result: 'success',
       time:new Date()
     });
+
     // 在用户发送消息且服务器未返回内容时，显示
     msgList.push({
       type: 'in',
@@ -225,16 +243,16 @@ Page({
       scrollIntoView: 'reply-end', // 滚动到最后一条消息
     });
 
-    this.apiChat(inputVal);
+    // this.apiChat(inputVal);
     //todo 测试
-    // let string = `<p>清明节是我国传统的重要节日</p>，<h1>是祭祀先人的节日</h1>。`
+    let string = `<p>清明节是我国传统的重要节日</p>，<h1>是祭祀先人的节日</h1>。`
     // let string = "Sure, here's a SQL statement to create a table for student names and ages:```CREATE TABLE students (id INT PRIMARY KEY,name VARCHAR(50 NOT NULL,  age INT NOT NULL );```This will create a table called `students` with columns for `id`, `name`, and `age`. The `id` column will be the primary key, and the `name` and `age` columns will be required (i.e. NOT NULL). You can insert data into this table using the INSERT statement:```  INSERT INTO students (name, age) VALUES ('John Doe', 22); INSERT INTO students (name, age) VALUES ('Jane Smith', 20);```And you can retrieve data from the table using the SELECT statement:```SELECT name, age FROM students;```This will return a list of all the names and ages in the table."
     // console.log(this.data.chatId);
 
-    // try {
-    //   wx.setStorageSync('smartai_reply_chatId', '123123123');
-    // } catch (e) { }
-    // this.setReply(string)
+    try {
+      wx.setStorageSync('smartai_reply_chatId', '123123123');
+    } catch (e) { }
+    this.setReply(string)
   },
   filterReplyDom(msgList){
     let that = this;
@@ -328,7 +346,15 @@ Page({
         });
         // 将回复列表进行存储
         try {
-          wx.setStorageSync('smartai_reply_list', msgList);
+          let keyName = formatDate('yyyyMMdd',new Date())
+          let key = wx.getStorageSync('smartai_reply_key') || [];
+          key.push(keyName);
+
+          wx.setStorageSync('smartai_reply_key', Array.from(new Set(key)));
+          let history = wx.getStorageSync('smartai_reply_'+keyName) || [];
+          history.push(msgList[lastMsgIndex - 1])
+          history.push(msgList[lastMsgIndex])
+          wx.setStorageSync('smartai_reply_'+keyName, history);
         } catch (e) { }
 
         setTimeout(()=>{

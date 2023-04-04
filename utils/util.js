@@ -81,7 +81,7 @@ function _debounce(fn,delay = 500){
 
 function formatDate(fmt,date){
   var o = { 
-      // "Y+" : date.getFullYear().toString(),                 //月份 
+      "Y+" : date.getFullYear().toString(),                 //月份 
       "M+" : date.getMonth()+1,                 //月份 
       "d+" : date.getDate(),                    //日 
       "h+" : date.getHours(),                   //小时 
