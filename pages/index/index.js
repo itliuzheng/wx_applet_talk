@@ -130,7 +130,7 @@ Page({
         // Do something when catch error
       }
 
-      if(msgList.length === 0){
+      if(historyList.length === 0){
         msgList.push({
           type: 'in',
           content: '你好，我是SMARTAI，最聪明的智能机器人，已接入最新的语言模型，我每天都会为你提供3次免费机会，关注公众号+6次，分享好友+3次，分享朋友圈+3次，活动期间每天免费获取上限20次，更多次数可关注公众号获取',
@@ -139,7 +139,7 @@ Page({
           time: new Date()
         })
       }
-      let time = msgList[msgList.length - 1].time;
+      let time = msgList.length ? msgList[msgList.length - 1].time : '';
       this.setData({
         historyList,
         messageTime:getMessageTime(time?time:new Date()),
