@@ -18,6 +18,16 @@
           "pathName": "pages/user/setting/index",
           "query": "",
           "scene": null
+        },
+        {
+          "name": "公众号进入",
+          "pathName": "pages/index/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": 1035,
+          "referrerInfo": {
+            "appId": "1111"
+          }
         }
       ]
     }

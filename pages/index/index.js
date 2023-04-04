@@ -45,7 +45,6 @@ Page({
     // 关注公众号弹窗
     showModal: false
   },
-
   // 页面加载时，初始化 ChatGPT
   onLoad() {
 
@@ -87,6 +86,17 @@ Page({
             isAvatarAuth: !!res.data.viaUrl,
             isUserNameAuth: !!res.data.userName
           })
+
+          let option = wx.getLaunchOptionsSync();
+          if(option.referrerInfo){
+            if(option.referrerInfo.appId){
+              // 如果来源是公众号 则关注成功
+              app.api.wxRechargeUpdateCount({
+                type:'follow',
+                userId : app.globalData.wxUser.openid
+              })
+            }
+          }
         }
         this.getUserInfoNumber();
       })
@@ -97,6 +107,8 @@ Page({
     app.initPage()
     .then(()=>{
       this.getUserInfo();
+
+
     })
     setTimeout(()=>{
       let historyList = this.data.historyList;
@@ -105,12 +117,7 @@ Page({
       try {
         var value = wx.getStorageSync('smartai_reply_key');
         chatId = wx.getStorageSync('smartai_reply_chatId');
-
-        // wx.setStorageSync('smartai_reply_key', key);
-        // wx.setStorageSync('smartai_reply_'+keyName, msgList);
-
         if (value) {
-          console.log(value);
           value.forEach(item=>{
             var list = wx.getStorageSync('smartai_reply_' + item);
             historyList.push({
@@ -118,14 +125,10 @@ Page({
               list
             })
           })
-          console.log(historyList);
-          // historyList = value;
         }
       } catch (e) {
         // Do something when catch error
       }
-      
-      console.log(historyList);
 
       if(msgList.length === 0){
         msgList.push({
