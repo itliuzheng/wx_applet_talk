@@ -1,6 +1,0 @@
-<view class="page">
-  <image src="/public/img/logo/logo.png"></image>
-  <view class="desc">请完成微信授权后继续使用</view>
-  <button class="yd-btn" bindtap="getUserProfile" lang="zh_CN">微信授权用户信息</button>
-  <button class="yd-btn yd-btn-cancel" bindtap="goBack">返回</button>
-</view>

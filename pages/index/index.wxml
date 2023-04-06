@@ -5,65 +5,20 @@
     scroll-animation-duration
     scroll-into-view="{{scrollIntoView}}">
     <view  id="msg-list">
-      <view wx:for="{{historyList}}" wx:for-item="itemName" wx:key="index">
-        <view class="time">{{itemName.time}}</view>
-        <view wx:for="{{itemName.list}}" wx:key="index">
-          <view id="msg-item-{{index}}" class="msg-item {{item.type === 'in' ? 'in' : 'out'}} {{item.result === 'loading'?'loading':''}}">
-            <image class="avatar {{item.type === 'in' ? 'in' : 'out'}}" src="{{item.avatar}}"></image>
-            <!-- 如果服务器连接失败，则显示重试按钮 -->
-            <view wx:if="{{item.result === 'error'}}" data-input-val="{{item.inputVal}}" bindtap="resendApi">
-              <view class="msg-content msg-content-error {{item.type === 'in' ? 'in' : 'out'}}">
-                <view class="msg-reply">{{item.content}}</view>
-                <image class="error-reload-img" src="/public/img/message/reload.png"></image>
-              </view>
-            </view>
-            <!-- 正常回复 -->
-            <view wx:else>
-              <view bindlongtap="copyText" data-value="{{item.content}}" class="msg-content {{item.type === 'in' ? 'in' : 'out'}}">
-              <!-- {{item.content}} -->
-                <!-- <view class="markdown" wx:if="{{item.type === 'in'}}"> -->
-
-                  <import src="/public/wxParse/wxParse.wxml"/>
-                  <template is="wxParse" data="{{wxParseData:item.domContent}}"></template>
-
-                <!-- <view wx:else>{{item.content}}</view> -->
-              </view>
-            </view>
-          </view>
-        </view>
-      </view>
+    <!-- 历史记录 -->
+    <view wx:for="{{historyList}}" wx:key="index">
+      <view class="time">{{item.time}}</view>
+      <reply-list msgList="{{item.list}}"></reply-list>
+    </view>
 
       <view class="time">{{messageTime}}</view>
-      <view wx:for="{{msgList}}" wx:key="index">
-        <view id="msg-item-{{index}}" class="msg-item {{item.type === 'in' ? 'in' : 'out'}} {{item.result === 'loading'?'loading':''}}">
-          <image class="avatar {{item.type === 'in' ? 'in' : 'out'}}" src="{{item.avatar}}"></image>
-          <!-- 如果服务器连接失败，则显示重试按钮 -->
-          <view wx:if="{{item.result === 'error'}}" data-input-val="{{item.inputVal}}" bindtap="resendApi">
-            <view class="msg-content msg-content-error {{item.type === 'in' ? 'in' : 'out'}}">
-              <view class="msg-reply">{{item.content}}</view>
-              <image class="error-reload-img" src="/public/img/message/reload.png"></image>
-            </view>
-          </view>
-          <!-- 正常回复 -->
-          <view wx:else>
-            <view bindlongtap="copyText" data-value="{{item.content}}" class="msg-content {{item.type === 'in' ? 'in' : 'out'}}">
-            <!-- {{item.content}} -->
-              <!-- <view class="markdown" wx:if="{{item.type === 'in'}}"> -->
-
-                <import src="/public/wxParse/wxParse.wxml"/>
-                <template is="wxParse" data="{{wxParseData:item.domContent}}"></template>
-
-              <!-- <view wx:else>{{item.content}}</view> -->
-            </view>
-          </view>
-        </view>
-      </view>
+      <reply-list msgList="{{msgList}}" bindresendApi="resendApi"></reply-list>
       <view class="reply-end" id="reply-end"></view>
     </view>
   </scroll-view>
 </view>
 <!-- keyboardHeight -->
-<view class="input-box-wrapper" style="bottom:{{keyboardHeight}}px">
+<view id="key-input-box" class="input-box-wrapper" style="bottom:{{keyboardHeight}}px">
  <view class="remark">*今日可用次数：{{canUseCount}}次，<button bindtap="onButtonClick" class="blue">关注公众号</button>解锁更多次数</view>
  <view class="input-box-content">
    <!-- <input class="input-box" 	adjust-position="{{false}}" value="{{inputVal}}" placeholder="" bindinput="onInput"/> -->
@@ -81,6 +36,8 @@
             maxlength="-1"
             auto-height
             bindkeyboardheightchange="onKeyboardHeightChange"
+            bindfocus="textareaFocus"
+            bindblur="textareaBlur"
             placeholder="{{placeholder}}" />
   </view>
    <button class="btn" type="primary" bindtap="onSend" disabled="{{btnDisabled}}">{{btnText}}</button>

@@ -5,6 +5,7 @@
   "navigationBarTextStyle": "black",
   "enablePullDownRefresh":false,
   "usingComponents": {
+    "reply-list":"/components/reply-list/index",
     "official-account-dialog" : "/components/officialAccountDialog/index"
   }
 }

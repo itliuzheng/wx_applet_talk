@@ -1,7 +1,7 @@
 @import "public/colorui/main.wxss";
 @import "public/colorui/icon.wxss";
 @import "public/colorui/animation.wxss";
-@import "public/wxParse/wxParse.wxss";
+/* @import "public/wxParse/wxParse.wxss"; */
 page{
   font-family: source-sans;
   /* background-color: #fff; */

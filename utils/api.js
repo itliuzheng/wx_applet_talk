@@ -102,4 +102,28 @@ module.exports = {
   wxUserAccountQueryUserInfo: (data) => {
     return request('/userAccount/queryUserInfo', 'post', data, false)
   },
+  /**
+   * 查询历史聊天记录
+   * @param {Object} data 
+   * {
+   * "userId":"ohTja4q6zWfbmhfyOD6H852uly2w",
+   * "content":"你好"
+   * }
+   */
+  wxUserAccountQueryChatHistory: (data) => {
+    return request('/userAccount/queryChatHistory', 'post', data, false)
+  },
+  /**
+   * 首页提示语
+   */
+  wxCallWord: () => {
+    return request('/callWord', 'post', null, false)
+  },
+  /**
+   * 查询分享次数信息文案
+   * @param {*} data 
+   */
+  wxUserAccountQueryShareCount: (data) => {
+    return request('/userAccount/queryShareCopy', 'post', data, false)
+  },
 }

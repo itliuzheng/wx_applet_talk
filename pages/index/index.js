@@ -61,13 +61,13 @@ Page({
   },
   onShow(){
     console.log('show');
-    this.getUserInfo();
+    // this.getUserInfo();
+    this.getUserInfoNumber();
   },
 
   // 获取用户信息
   getUserInfo() {
-
-    app.initPage()
+    return app.initPage()
     .then(()=>{
       app.api.wxUserAccountQueryUserInfo({
         userId : app.globalData.wxUser.openid
@@ -88,12 +88,17 @@ Page({
           })
 
           let option = wx.getLaunchOptionsSync();
-          if(option.referrerInfo){
-            if(option.referrerInfo.appId){
+          if(option.query){
+            if(option.query.sence){
+              console.log('从公众号进来的');
+              console.log(option);
               // 如果来源是公众号 则关注成功
               app.api.wxRechargeUpdateCount({
                 type:'follow',
                 userId : app.globalData.wxUser.openid
+              })
+              .catch(res=>{
+
               })
             }
           }
@@ -106,57 +111,91 @@ Page({
   getInfo(){
     app.initPage()
     .then(()=>{
-      this.getUserInfo();
-
-
+      this.getUserInfo()
+      .then(()=>{
+        this.initHistoryAndHomeWord();
+      })
     })
-    setTimeout(()=>{
-      let historyList = this.data.historyList;
-      let msgList = this.data.msgList;
-      let chatId = null;
-      try {
-        var value = wx.getStorageSync('smartai_reply_key');
-        chatId = wx.getStorageSync('smartai_reply_chatId');
-        if (value) {
-          value.forEach(item=>{
-            var list = wx.getStorageSync('smartai_reply_' + item);
-            historyList.push({
-              time:getMessageTime(list[list.length - 1].time),
-              list
-            })
-          })
-        }
-      } catch (e) {
-        // Do something when catch error
-      }
+  },
 
-      if(historyList.length === 0){
-        msgList.push({
-          type: 'in',
-          content: '你好，我是SMARTAI，最聪明的智能机器人，已接入最新的语言模型，我每天都会为你提供3次免费机会，关注公众号+6次，分享好友+3次，分享朋友圈+3次，活动期间每天免费获取上限20次，更多次数可关注公众号获取',
-          avatar:'/public/img/logo/smartai-logo.png',
-          result:'success',
-          time: new Date()
+  // 初始化历史记录和首次提示语
+  async initHistoryAndHomeWord(){
+    // let historyRes = await app.api.wxUserAccountQueryChatHistory({
+    //   userId : app.globalData.wxUser.openid
+    // })
+    // console.log(historyRes);
+    // if(historyRes.errorCode === '0000'){
+    // }
+
+    let historyList = this.data.historyList;
+    let msgList = this.data.msgList;
+    let chatId = null;
+
+    try {
+      var value = wx.getStorageSync('smartai_reply_key');
+      chatId = wx.getStorageSync('smartai_reply_chatId');
+      if (value) {
+        value.forEach(item=>{
+          var list = wx.getStorageSync('smartai_reply_' + item);
+          historyList.push({
+            time:getMessageTime(list[list.length - 1].time),
+            list
+          })
         })
       }
-      let time = msgList.length ? msgList[msgList.length - 1].time : '';
-      this.setData({
-        historyList,
-        messageTime:getMessageTime(time?time:new Date()),
-        msgList : this.filterReplyDom(msgList),
-        scrollIntoView: 'reply-end', // 滚动到最后一条消息
-        chatId:chatId
-      })
+    } catch (e) {
+      // Do something when catch error
+    }
 
-      // 获取消息容器高度
-      var self = this;
-      wx.createSelectorQuery().select('#msg-list').boundingClientRect(function (rect) {
-        self.setData({
-          // scrollHeight: rect.height // 使用data更新scrollHeight，方便wxml中调用
-          scrollHeight: wx.getSystemInfoSync().windowHeight - 75 // 使用data更新scrollHeight，方便wxml中调用
-        });
-      }).exec();
-    },500)
+
+    // 获取首页提示语
+    let homeWordRes = await app.api.wxCallWord();
+    console.log(homeWordRes.data);
+    let homeWord = '哈喽，新朋友，已为你奉上3次体验机会，你每天也可以通过完成任务额外获取最高20次的机会，可累加：分享好友+3次、朋友圈+3次、首次关注公众号+6次';
+    if(homeWordRes.errorCode === '0000'){
+      homeWord = homeWordRes.data;
+    }
+
+    if(!historyList.length){
+      msgList.push({
+        type: 'in',
+        content: homeWordRes.data,
+        avatar:'/public/img/logo/smartai-logo.png',
+        result:'success',
+        time: new Date()
+      })
+    }else{
+      console.log(historyList[0].list);
+      historyList[0].list.unshift(
+        this.filterReplyDom([{
+          type: 'in',
+          content: homeWordRes.data,
+          avatar:'/public/img/logo/smartai-logo.png',
+          result:'success',
+        }])[0])
+    }
+
+    let time = msgList.length ? msgList[msgList.length - 1].time : '';
+    this.setData({
+      historyList,
+      messageTime:getMessageTime(time?time:new Date()),
+      msgList : this.filterReplyDom(msgList),
+      chatId:chatId
+    })
+
+    // 获取消息容器高度
+    var self = this;
+    wx.createSelectorQuery().select('#key-input-box').boundingClientRect(function (rect) {
+    // wx.createSelectorQuery().select('#msg-list').boundingClientRect(function (rect) {
+      console.log(rect);
+      self.setData({
+        // scrollHeight: rect.height // 使用data更新scrollHeight，方便wxml中调用
+        scrollHeight: wx.getSystemInfoSync().windowHeight - rect.height, // 使用data更新scrollHeight，方便wxml中调用
+        scrollIntoView: 'reply-end', // 滚动到最后一条消息
+      });
+    }).exec();
+
+
   },
   // 获取用户次数
   getUserInfoNumber(){
@@ -254,6 +293,7 @@ Page({
 
     this.apiChat(inputVal);
     //todo 测试
+    // this.replyError(inputVal);
     // let string = `<p>清明节是我国传统的重要节日</p>，<h1>是祭祀先人的节日</h1>。`
     // let string = "Sure, here's a SQL statement to create a table for student names and ages:```CREATE TABLE students (id INT PRIMARY KEY,name VARCHAR(50 NOT NULL,  age INT NOT NULL );```This will create a table called `students` with columns for `id`, `name`, and `age`. The `id` column will be the primary key, and the `name` and `age` columns will be required (i.e. NOT NULL). You can insert data into this table using the INSERT statement:```  INSERT INTO students (name, age) VALUES ('John Doe', 22); INSERT INTO students (name, age) VALUES ('Jane Smith', 20);```And you can retrieve data from the table using the SELECT statement:```SELECT name, age FROM students;```This will return a list of all the names and ages in the table."
     // console.log(this.data.chatId);
@@ -268,7 +308,7 @@ Page({
     //wxParse多数据循环绑定
     if (msgList.length > 0) {
       for (let i = 0; i < msgList.length; i++) {
-        WxParse.wxParse('reply' + i, 'html', msgList[i].content, that);
+        WxParse.wxParse('reply' + i, 'md', msgList[i].content, that);
         if (i === msgList.length - 1) {
           WxParse.wxParseTemArray("replyOptionArray", 'reply', msgList.length, that)
         }
@@ -391,7 +431,7 @@ Page({
       inputVal:inputVal,// 原用户输入的文字
     }
     this.setData({
-      msgList,
+      msgList : this.filterReplyDom(msgList),
       btnDisabled:true,
       btnText:'发送',
       scrollIntoView: 'reply-end', // 滚动到最后一条消息
@@ -399,31 +439,36 @@ Page({
   },
   // 重发请求
   resendApi(e){
-    console.log(e);
-    let inputVal = e.currentTarget.dataset.inputVal;
+    let {inputVal} = e.detail;
     this.apiChat(inputVal);
   },
   // 分享给朋友
   onShareAppMessage(){
-    console.log('11');
-    const promise = new Promise(resolve => {
-      setTimeout(() => {
-
-        app.api.wxRechargeUpdateCount({
-          type:'share',
-          userId : app.globalData.wxUser.openid
-        })
-
-        resolve({
-          title: '已接入最新语言模型，天文地理无所不知',
-          path: '/pages/index/index',
-        })
-      }, 500)
-    })
+    setTimeout(() => {
+      app.api.wxRechargeUpdateCount({
+        type:'share',
+        userId : app.globalData.wxUser.openid
+      })
+    }, 500)
     return {
       title: '已接入最新语言模型，天文地理无所不知',
       path: '/pages/index/index',
       promise 
+    }
+  },
+
+  // 分享朋友圈
+  // 用于自定义分享内容，不支持自定义页面路径
+  onShareTimeline(){
+    setTimeout(()=>{
+      app.api.wxRechargeUpdateCount({
+        type:'pyq',
+        userId : app.globalData.wxUser.openid
+      })
+    },1000)
+    return {
+      title: '已接入最新语言模型，天文地理无所不知',
+      query:'share=pyq'
     }
   },
   // 点击“显示二维码”按钮时触发的事件处理函数
@@ -442,41 +487,42 @@ Page({
   onKeyboardHeightChange: function (e) {
     // 监听软键盘高度变化，更新scroll-view的高度和scrollTop
     var self = this;
-    var {height} = e.detail;
-    console.log(wx.getSystemInfoSync().windowHeight - height);
+    var {height = 0 } = e.detail;
+
     const navBarHeight = app.globalData.navBarHeight;
     // const windowHeight = wx.getSystemInfoSync().windowHeight;
     // const inputBottom = navBarHeight + (windowHeight - navBarHeight - 40) / 2;
 
     const inputBottom = height - navBarHeight >= 0 ? height - navBarHeight :0;
-    console.log(navBarHeight);
+
+    // console.log('inputBottom===',inputBottom);
 
     self.setData({
       keyboardHeight: inputBottom, // 同步更新data中的keyboardHeight
       // scrollHeight: wx.getSystemInfoSync().windowHeight - height // 更新scroll-view的高度
     });
+
+    wx.createSelectorQuery().select('#key-input-box').boundingClientRect(function (rect) {
+      // wx.createSelectorQuery().select('#msg-list').boundingClientRect(function (rect) {
+        // console.log('wx.getSystemInfoSync().windowHeight===',wx.getSystemInfoSync().windowHeight);
+        // console.log(rect);
+        self.setData({
+          scrollHeight: wx.getSystemInfoSync().windowHeight - inputBottom  - rect.height, 
+          scrollIntoView: 'reply-end', // 滚动到最后一条消息
+        });
+      }).exec();
+
     // wx.nextTick(function () {
-    //   console.log('nextTick');
-    //   console.log(self.data.scrollHeight);
-    //   wx.pageScrollTo({ // 滚动到底部
-    //     scrollTop: self.data.scrollHeight
-    //   });
+    //   self.setData({
+    //     scrollIntoView: 'reply-end', // 滚动到最后一条消息
+    //   })
     // });
   },
-  // 长按复制
-  copyText(e){
-    let value = e.currentTarget.dataset.value;
-    wx.setClipboardData({
-      data: value,
-      success(){
-        wx.getClipboardData({
-          success(){
-            wx.showToast({
-              title: '复制成功',
-            })
-          }
-        })
-      }
-    })
+  textareaFocus(e){
+    this.onKeyboardHeightChange(e);
   },
+  textareaBlur(e){
+    // ↵
+    this.onKeyboardHeightChange(e);
+  }
 })

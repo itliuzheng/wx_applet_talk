@@ -10,8 +10,7 @@
     </view>
     <view class="head-desc">
       <image class="desc-icon" src="/public/img/myself/icon.png"></image>
-      <!-- <text>每天可获得{{canUseCount}}次免费机会，不叠加</text> -->
-      <text>每日免费次数会在0:00清零重新计算</text>
+      <text>{{canUseCountText}}</text>
     </view>
   </view>
 </view>

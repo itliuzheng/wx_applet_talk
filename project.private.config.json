@@ -28,6 +28,23 @@
           "referrerInfo": {
             "appId": "1111"
           }
+        },
+        {
+          "name": "",
+          "pathName": "pages/index/index",
+          "query": "sence=\"公众号\"",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "",
+          "pathName": "pages/index/index",
+          "query": "sence=%22%E5%85%AC%E4%BC%97%E5%8F%B7%22",
+          "launchMode": "default",
+          "scene": 1035,
+          "referrerInfo": {
+            "appId": "wx56cc2fe85bf42831"
+          }
         }
       ]
     }

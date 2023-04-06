@@ -13,7 +13,7 @@ Page({
     isAvatarAuth: false,
     isUserNameAuth: false,
     userCenter: null,
-    canUseCount:0,
+    canUseCountText: '',
     showModal: false
   },
   onShow() {
@@ -55,14 +55,14 @@ Page({
       this.getUserInfo();
     })
   },
-  // 获取用户次数
+  // 查询分享次数信息文案
   getUserInfoNumber(){
-    app.api.wxUserAccountQueryCount({
+    // app.api.wxUserAccountQueryCount({
+    app.api.wxUserAccountQueryShareCount({
       userId : app.globalData.wxUser.openid
     }).then(res=>{
-      console.log(res);
       this.setData({
-        canUseCount:res.data
+        canUseCountText:res.data
       })
     })
     .catch(()=>{
@@ -166,22 +166,15 @@ Page({
   // 分享朋友圈
   // 用于自定义分享内容，不支持自定义页面路径
   onShareTimeline(){
-    console.log('222');
-    const promise = new Promise(resolve => {
-      setTimeout(() => {
-        resolve({
-          title: '已接入最新语言模型，天文地理无所不知'
-        })
-      }, 500)
-    })
-    app.api.wxRechargeUpdateCount({
-      type:'pyq',
-      userId : app.globalData.wxUser.openid
-    })
+    setTimeout(()=>{
+      app.api.wxRechargeUpdateCount({
+        type:'pyq',
+        userId : app.globalData.wxUser.openid
+      })
+    },1000)
     return {
       title: '已接入最新语言模型，天文地理无所不知',
-      query:'12',
-      promise 
+      query:'share=pyq'
     }
   },
   // 提示分享朋友圈
@@ -209,25 +202,4 @@ Page({
       showModal: false
     });
   },
-  // 调起相机 扫描
-  onScanCodeTap: function () {
-    wx.scanCode({
-      success: function (res) {
-        wx.showModal({
-          title: '关注公众号',
-          content: '关注公众号成功',
-          showCancel: false,
-          success: function () {
-            // TODO: 引导用户进入公众号页面进行关注
-          }
-        })
-      },
-      fail: function () {
-        wx.showToast({
-          title: '扫码失败，请重试',
-          icon: 'none'
-        })
-      }
-    })
-  }
 })

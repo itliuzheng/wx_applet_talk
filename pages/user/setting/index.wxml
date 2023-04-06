@@ -17,13 +17,4 @@
       </view>
     </view>
   </view>
-  <!-- <view class="li">
-    <view class="title">手机号</view>
-    <view class="content">
-      <view class="remark">{{wxUser.phone || '授权获取'}}</view>
-      <view>
-        <button class="btn" open-type="getPhoneNumber" bindgetphonenumber="getPhone">点击授权</button>
-      </view>
-    </view>
-  </view> -->
 </view>
