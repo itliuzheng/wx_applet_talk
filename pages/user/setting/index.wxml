@@ -10,11 +10,16 @@
   </view>
   <view class="li">
     <view class="title">昵称</view>
-    <view class="content">
-      <view class="remark">{{wxUser.nickName}}</view>
-      <view>
-        <button class="btn" open-type="getUserInfo" bindgetuserinfo="getUserInfo">{{!isUserNameAuth?'点击授权':'已授权'}}</button>
-      </view>
-    </view>
+
+    <form bindsubmit="saveNickName">
+      <view class="content">
+        <view class="remark">
+            <input name="nickname" type="nickname" value="{{wxUser.nickName}}" bindinput="bindKeyInput"/>
+          </view>
+          <view>
+            <button class="btn" form-type="submit">点击保存</button>
+          </view>
+        </view>
+    </form>
   </view>
 </view>

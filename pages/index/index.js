@@ -139,7 +139,8 @@ Page({
           var list = wx.getStorageSync('smartai_reply_' + item);
           historyList.push({
             time:getMessageTime(list[list.length - 1].time),
-            list
+            list:this.filterReplyDom(list)
+            // list
           })
         })
       }
@@ -308,7 +309,8 @@ Page({
     //wxParse多数据循环绑定
     if (msgList.length > 0) {
       for (let i = 0; i < msgList.length; i++) {
-        WxParse.wxParse('reply' + i, 'md', msgList[i].content, that);
+        WxParse.wxParse('reply' + i, 'md', msgList[i].content.replace(/\n/ig,'<br/>'), that);
+        // WxParse.wxParse('reply' + i, 'md', msgList[i].content, that);
         if (i === msgList.length - 1) {
           WxParse.wxParseTemArray("replyOptionArray", 'reply', msgList.length, that)
         }
@@ -338,7 +340,9 @@ Page({
           wx.setStorageSync('smartai_reply_chatId', res.data.chatId);
         } catch (e) { }
         // 成功
-        this.setReply(res.data.context);
+        // let main = res.data.context.replace(/↵↵/ig,'\n');
+        let main = res.data.context;
+        this.setReply(main);
       }else{
         // 失败
         this.replyError(inputVal);
