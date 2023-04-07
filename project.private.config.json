@@ -32,7 +32,7 @@
         {
           "name": "",
           "pathName": "pages/index/index",
-          "query": "sence=\"公众号\"",
+          "query": "sence=公众号",
           "launchMode": "default",
           "scene": null
         },

@@ -46,7 +46,7 @@ Page({
     showModal: false
   },
   // 页面加载时，初始化 ChatGPT
-  onLoad() {
+  onLoad(res) {
 
     const systemInfo = wx.getSystemInfoSync();
     const tabBarHeight = systemInfo.screenHeight - systemInfo.windowHeight - systemInfo.statusBarHeight - 44;
@@ -57,7 +57,7 @@ Page({
     //   engine: 'davinci', // 使用 Davinci 引擎
     //   apiKey: '您的 API Key',
     // });
-    this.getInfo();
+    this.getInfo(res);
   },
   onShow(){
     console.log('show');
@@ -66,7 +66,7 @@ Page({
   },
 
   // 获取用户信息
-  getUserInfo() {
+  getUserInfo(data) {
     return app.initPage()
     .then(()=>{
       app.api.wxUserAccountQueryUserInfo({
@@ -88,30 +88,44 @@ Page({
           })
 
           let option = wx.getLaunchOptionsSync();
-          if(option.query){
-            if(option.query.sence){
-              console.log('从公众号进来的');
-              console.log(option);
-              // 如果来源是公众号 则关注成功
-              app.api.wxRechargeUpdateCount({
-                type:'follow',
-                userId : app.globalData.wxUser.openid
-              })
-              .catch(res=>{
+          // if(option.query){
+          //   if(option.query.sence){
+          //     console.log('从公众号进来的');
+          //     console.log(option);
+          //     // 如果来源是公众号 则关注成功
+          //     app.api.wxRechargeUpdateCount({
+          //       type:'follow',
+          //       userId : app.globalData.wxUser.openid
+          //     })
+          //     .catch(res=>{
 
-              })
-            }
+          //     })
+          //   }
+          // }
+
+          if((data && data.sence) || (option.query && option.query.sence)){
+            console.log(data.sence);
+            console.log('从公众号进来的');
+            // 如果来源是公众号 则关注成功
+            app.api.wxRechargeUpdateCount({
+              type:'follow',
+              userId : app.globalData.wxUser.openid
+            })
+            .catch(res=>{
+
+            })
           }
+
         }
         this.getUserInfoNumber();
       })
     })
   },
   // 初始化，获取对话信息
-  getInfo(){
+  getInfo(data){
     app.initPage()
     .then(()=>{
-      this.getUserInfo()
+      this.getUserInfo(data)
       .then(()=>{
         this.initHistoryAndHomeWord();
       })
@@ -126,6 +140,7 @@ Page({
     // console.log(historyRes);
     // if(historyRes.errorCode === '0000'){
     // }
+
 
     let historyList = this.data.historyList;
     let msgList = this.data.msgList;
@@ -151,7 +166,7 @@ Page({
 
     // 获取首页提示语
     let homeWordRes = await app.api.wxCallWord();
-    console.log(homeWordRes.data);
+
     let homeWord = '哈喽，新朋友，已为你奉上3次体验机会，你每天也可以通过完成任务额外获取最高20次的机会，可累加：分享好友+3次、朋友圈+3次、首次关注公众号+6次';
     if(homeWordRes.errorCode === '0000'){
       homeWord = homeWordRes.data;

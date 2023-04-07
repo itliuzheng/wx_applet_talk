@@ -19,6 +19,7 @@ module.exports = (url, method, data, showLoading) => {
       url: _url,
       method: method,
       data: data,
+      timeout:120000,
       header: {
         'app-id': wx.getAccountInfoSync().miniProgram.appId,
         'third-session': getApp().globalData.thirdSession != null ? getApp().globalData.thirdSession : ''
